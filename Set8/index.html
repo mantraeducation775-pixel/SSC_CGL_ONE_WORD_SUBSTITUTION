@@ -1,0 +1,497 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+}
+.header{
+  text-align:center;
+  padding:15px;
+  background:#dc2626;
+  font-size:20px;
+  font-weight:bold;
+}
+.main{
+  display:flex;
+  flex-wrap:wrap;
+  width:95%;
+  margin:auto;
+}
+.left{ flex:2; }
+.right{ flex:1; }
+
+.card{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin:10px;
+  box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+.option{
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  background:#1f2937;
+  cursor:pointer;
+  transition:.2s;
+}
+.option:hover{ background:#374151; }
+
+.selected{ background:#2563eb !important; }
+.correct{ background:#16a34a !important; }
+.wrong{ background:#dc2626 !important; }
+
+button{
+  padding:10px 14px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+}
+.primary{ background:#2563eb; }
+.danger{ background:#dc2626; }
+.submit{ background:#16a34a; }
+.info{ background:#7c3aed; }
+.orange{ background:#f59e0b; color:black; }
+.gray{ background:#475569; }
+
+.qbtn{
+  width:40px;
+  height:40px;
+  margin:4px;
+  border:none;
+  border-radius:6px;
+  background:#374151;
+  color:white;
+  cursor:pointer;
+}
+.attempted{ background:#f59e0b !important; }
+
+.timer{
+  color:#facc15;
+  font-size:18px;
+  font-weight:bold;
+}
+
+#infoBox{
+  display:none;
+  margin-top:18px;
+  padding:15px;
+  border-radius:10px;
+  background:#0f172a;
+  border:1px solid #334155;
+  line-height:1.7;
+}
+
+ul{ padding-left:20px; }
+
+@media(max-width:768px){
+  .main{ flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</div>
+
+<div style="text-align:center;padding:10px;">
+⏱ Time Left: <span id="timer" class="timer">15:00</span>
+</div>
+
+<div class="main">
+
+  <div class="left">
+    <div class="card">
+
+      <h3 id="question"></h3>
+      <div id="options"></div>
+
+      <button class="primary" onclick="nextQ()">Save & Next</button>
+      <button class="danger" onclick="clearAns()">Clear</button>
+      <button class="submit" onclick="submitQuiz()">Submit</button>
+      <button class="info" onclick="showQuestionMeaning()">Meaning of Question</button>
+      <button class="orange" onclick="showOptionMeaning()">Option Meaning</button>
+      <button class="gray" onclick="hideInfo()">Hide Meaning</button>
+
+      <div id="infoBox"></div>
+      <div id="result"></div>
+
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>Questions</h3>
+      <div id="panel"></div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="submitSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+
+let questions = [
+
+{
+q:"Sentimental longing for the past",
+opt:["Affection","Homesickness","Inertia","Nostalgia"],
+ans:"Nostalgia",
+
+explainQ:"Matlab purane dinon ya past ki yaadon ko yaad karke emotional feeling aana.",
+
+optMeaning:{
+Affection:"Pyaar / lagav",
+Homesickness:"Ghar ki yaad aana",
+Inertia:"Jadta / movement ka resistance",
+Nostalgia:"Past ki emotional yaad"
+},
+
+ansExplain:"Correct answer Nostalgia hai kyunki past ko yaad karke sentimental feeling ko nostalgia bolte hain."
+},
+
+{
+q:"Collection of written or spoken texts",
+opt:["Data bank","Dictionary","Corpus","Circa"],
+ans:"Corpus",
+
+explainQ:"Matlab likhe hue ya bole gaye texts ka bada collection.",
+
+optMeaning:{
+"Data bank":"Information collection",
+Dictionary:"Shabdon ka meaning book",
+Corpus:"Texts ka collection",
+Circa:"Approximate time / around"
+},
+
+ansExplain:"Correct answer Corpus hai kyunki written ya spoken texts ke collection ko corpus bolte hain."
+},
+
+{
+q:"Particular form of language of a region or group",
+opt:["Singular","Slang","Dialect","Referendum"],
+ans:"Dialect",
+
+explainQ:"Matlab kisi region ya group ki khas boli ya language style.",
+
+optMeaning:{
+Singular:"Single / ek",
+Slang:"Informal local words",
+Dialect:"Regional boli / language form",
+Referendum:"Public voting on issue"
+},
+
+ansExplain:"Correct answer Dialect hai kyunki region-specific language form ko dialect bolte hain."
+},
+
+{
+q:"One who studies the evolution of mankind",
+opt:["Anarchist","Amateur","Anthropologist","Antagonist"],
+ans:"Anthropologist",
+
+explainQ:"Matlab jo human beings ke origin, development aur evolution ka study karta hai.",
+
+optMeaning:{
+Anarchist:"Government oppose karne wala",
+Amateur:"Beginner / non-professional",
+Anthropologist:"Human evolution/study expert",
+Antagonist:"Opponent / rival"
+},
+
+ansExplain:"Correct answer Anthropologist hai kyunki mankind ke study ko anthropology aur expert ko anthropologist bolte hain."
+},
+
+{
+q:"Poor physical or mental condition",
+opt:["Ill nature","Illicit","Ill-fated","Ill health"],
+ans:"Ill health",
+
+explainQ:"Matlab sharirik ya mansik health ka kharab hona.",
+
+optMeaning:{
+"Ill nature":"Bad temperament",
+Illicit:"Illegal",
+"Ill-fated":"Bad luck wala",
+"Ill health":"Poor health condition"
+},
+
+ansExplain:"Correct answer Ill health hai kyunki poor physical ya mental condition ko ill health bolte hain."
+},
+
+{
+q:"A person who believes that laws and governments are not necessary",
+opt:["Antagonist","Antichrist","Anarchist","Adversary"],
+ans:"Anarchist",
+
+explainQ:"Matlab aisa vyakti jo maanta hai ki law aur government ki zarurat nahi hai.",
+
+optMeaning:{
+Antagonist:"Opponent / villain",
+Antichrist:"Religious opposite figure",
+Anarchist:"Government/law ko unnecessary maanne wala",
+Adversary:"Enemy / rival"
+},
+
+ansExplain:"Correct answer Anarchist hai kyunki jo government aur laws ke against ho use anarchist bolte hain."
+},
+
+{
+q:"A book giving information about all areas of knowledge",
+opt:["Encyclopedia","Dictionary","Volume","Anthology"],
+ans:"Encyclopedia",
+
+explainQ:"Matlab aisi book jisme almost har topic ka detailed knowledge ho.",
+
+optMeaning:{
+Encyclopedia:"Sabhi topics ki knowledge book",
+Dictionary:"Words meaning book",
+Volume:"Book ka part/size",
+Anthology:"Selected writings collection"
+},
+
+ansExplain:"Correct answer Encyclopedia hai kyunki all areas of knowledge wali book encyclopedia hoti hai."
+},
+
+{
+q:"A place to play games and bet",
+opt:["Motel","Hotel","Casino","Pub"],
+ans:"Casino",
+
+explainQ:"Matlab aisi jagah jahan games kheli jati hain aur betting/gambling hoti hai.",
+
+optMeaning:{
+Motel:"Roadside hotel",
+Hotel:"Stay karne ki jagah",
+Casino:"Betting/gaming place",
+Pub:"Drinks/social place"
+},
+
+ansExplain:"Correct answer Casino hai kyunki games aur betting wali place casino hoti hai."
+},
+
+{
+q:"Any female animal that feeds its young on milk",
+opt:["Vertebrate","Parasite","Mammal","Fauna"],
+ans:"Mammal",
+
+explainQ:"Matlab aise animals jo apne bachchon ko milk pilate hain.",
+
+optMeaning:{
+Vertebrate:"Backbone wala animal",
+Parasite:"Dusre par depend organism",
+Mammal:"Milk feeding animal",
+Fauna:"Animals of a region"
+},
+
+ansExplain:"Correct answer Mammal hai kyunki mammals apne young ones ko milk feed karte hain."
+},
+
+{
+q:"Certain to happen",
+opt:["Justifiable","Indispensable","Convertible","Inevitable"],
+ans:"Inevitable",
+
+explainQ:"Matlab jo hona pakka hai aur jise roka nahi ja sakta.",
+
+optMeaning:{
+Justifiable:"Jise justify kiya ja sake",
+Indispensable:"Bahut zaruri",
+Convertible:"Badla ja sakne wala",
+Inevitable:"Jo pakka hone wala ho"
+},
+
+ansExplain:"Correct answer Inevitable hai kyunki certain to happen cheez inevitable hoti hai."
+}
+
+
+ 
+
+];
+
+let current=0;
+let answers={};
+let time=900;
+let interval;
+let submitted=false;
+
+function playSound(id){
+  document.getElementById(id).play();
+}
+
+function loadQ(){
+  let q=questions[current];
+  document.getElementById("question").innerText="Q"+(current+1)+". "+q.q;
+
+  let optDiv=document.getElementById("options");
+  optDiv.innerHTML="";
+
+  q.opt.forEach(o=>{
+    let d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+
+    if(answers[current]==o) d.classList.add("selected");
+
+    d.onclick=()=>{
+      if(submitted) return;
+
+      playSound("clickSound");
+      answers[current]=o;
+
+      document.querySelectorAll(".option")
+      .forEach(x=>x.classList.remove("selected"));
+
+      d.classList.add("selected");
+      document.getElementById("btn"+current).classList.add("attempted");
+    };
+
+    optDiv.appendChild(d);
+  });
+
+  if(submitted) review();
+}
+
+function showQuestionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Meaning of Question</h3>
+    <p>${q.explainQ}</p>
+  `;
+}
+
+function showOptionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Option Meaning</h3>
+    <ul>
+      ${q.opt.map(o=>`<li><b>${o}</b> → ${q.optMeaning[o]}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function hideInfo(){
+  document.getElementById("infoBox").style.display="none";
+}
+
+function review(){
+  let q=questions[current];
+
+  document.querySelectorAll(".option").forEach(opt=>{
+    opt.classList.remove("selected");
+
+    if(opt.innerText===q.ans){
+      opt.classList.add("correct");
+    }
+
+    if(
+      answers[current] &&
+      answers[current]!==q.ans &&
+      opt.innerText===answers[current]
+    ){
+      opt.classList.add("wrong");
+    }
+  });
+
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#22c55e;">Correct Answer</h3>
+    <p><b>Answer:</b> ${q.ans}</p>
+    <p>${q.ansExplain}</p>
+  `;
+}
+
+function createPanel(){
+  let p=document.getElementById("panel");
+  questions.forEach((_,i)=>{
+    let b=document.createElement("button");
+    b.innerText=i+1;
+    b.className="qbtn";
+    b.id="btn"+i;
+    b.onclick=()=>{ current=i; loadQ(); };
+    p.appendChild(b);
+  });
+}
+
+function nextQ(){
+  if(current<questions.length-1){
+    current++;
+    loadQ();
+  }else{
+    submitQuiz();
+  }
+}
+
+function clearAns(){
+  if(!submitted){
+    delete answers[current];
+    loadQ();
+  }
+}
+
+function submitQuiz(){
+  submitted=true;
+  playSound("submitSound");
+  clearInterval(interval);
+
+  let c=0,w=0;
+
+  questions.forEach((q,i)=>{
+    if(!answers[i]) return;
+    if(answers[i]===q.ans) c++;
+    else w++;
+  });
+
+  let score=c-(w*0.25);
+  let percent=(score/questions.length)*100;
+
+  document.getElementById("result").innerHTML=`
+    <h3>Score: ${score}</h3>
+    <p>Correct: ${c} | Wrong: ${w}</p>
+    <p>Percent: ${percent.toFixed(2)}%</p>
+  `;
+
+  loadQ();
+}
+
+function timerRun(){
+  interval=setInterval(()=>{
+    time--;
+
+    let m=Math.floor(time/60);
+    let s=time%60;
+
+    document.getElementById("timer").innerText=
+      `${m}:${s<10?"0":s}`;
+
+    if(time<=0) submitQuiz();
+  },1000);
+}
+
+createPanel();
+loadQ();
+timerRun();
+
+</script>
+
+</body>
+</html>
+```

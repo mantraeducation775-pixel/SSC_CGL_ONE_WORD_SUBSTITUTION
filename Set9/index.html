@@ -1,0 +1,668 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+}
+.header{
+  text-align:center;
+  padding:15px;
+  background:#dc2626;
+  font-size:20px;
+  font-weight:bold;
+}
+.main{
+  display:flex;
+  flex-wrap:wrap;
+  width:95%;
+  margin:auto;
+}
+.left{ flex:2; }
+.right{ flex:1; }
+
+.card{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin:10px;
+  box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+.option{
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  background:#1f2937;
+  cursor:pointer;
+  transition:.2s;
+}
+.option:hover{ background:#374151; }
+
+.selected{ background:#2563eb !important; }
+.correct{ background:#16a34a !important; }
+.wrong{ background:#dc2626 !important; }
+
+button{
+  padding:10px 14px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+}
+.primary{ background:#2563eb; }
+.danger{ background:#dc2626; }
+.submit{ background:#16a34a; }
+.info{ background:#7c3aed; }
+.orange{ background:#f59e0b; color:black; }
+.gray{ background:#475569; }
+
+.qbtn{
+  width:40px;
+  height:40px;
+  margin:4px;
+  border:none;
+  border-radius:6px;
+  background:#374151;
+  color:white;
+  cursor:pointer;
+}
+.attempted{ background:#f59e0b !important; }
+
+.timer{
+  color:#facc15;
+  font-size:18px;
+  font-weight:bold;
+}
+
+#infoBox{
+  display:none;
+  margin-top:18px;
+  padding:15px;
+  border-radius:10px;
+  background:#0f172a;
+  border:1px solid #334155;
+  line-height:1.7;
+}
+
+ul{ padding-left:20px; }
+
+@media(max-width:768px){
+  .main{ flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</div>
+
+<div style="text-align:center;padding:10px;">
+⏱ Time Left: <span id="timer" class="timer">15:00</span>
+</div>
+
+<div class="main">
+
+  <div class="left">
+    <div class="card">
+
+      <h3 id="question"></h3>
+      <div id="options"></div>
+
+      <button class="primary" onclick="nextQ()">Save & Next</button>
+      <button class="danger" onclick="clearAns()">Clear</button>
+      <button class="submit" onclick="submitQuiz()">Submit</button>
+      <button class="info" onclick="showQuestionMeaning()">Meaning of Question</button>
+      <button class="orange" onclick="showOptionMeaning()">Option Meaning</button>
+      <button class="gray" onclick="hideInfo()">Hide Meaning</button>
+
+      <div id="infoBox"></div>
+      <div id="result"></div>
+
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>Questions</h3>
+      <div id="panel"></div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="submitSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+
+let questions = [
+
+{
+q:"Absolutely necessary",
+opt:["Insular","Indispensable","Isolated","Intolerant"],
+ans:"Indispensable",
+
+explainQ:"Matlab jo bahut hi zaroori ho, jiske bina kaam chal hi na sake.",
+
+optMeaning:{
+Insular:"Alag-thalag ya narrow-minded",
+Indispensable:"Bilkul zaroori / absolutely necessary",
+Isolated:"Akelā ya separated",
+Intolerant:"Jo tolerate na kare"
+},
+
+ansExplain:"Correct answer 'Indispensable' hai kyunki iska meaning hota hai absolutely necessary."
+},
+
+{
+q:"Animal living on land and water",
+opt:["Marine","Amphibian","Arboreal","Terrestrial"],
+ans:"Amphibian",
+
+explainQ:"Matlab aisa jaanwar jo zameen aur paani dono jagah reh sakta hai.",
+
+optMeaning:{
+Marine:"Samundar me rehne wala",
+Amphibian:"Land aur water dono me rehne wala",
+Arboreal:"Pedon par rehne wala",
+Terrestrial:"Sirf zameen par rehne wala"
+},
+
+ansExplain:"Correct answer 'Amphibian' hai kyunki ye land aur water dono me jeete hain."
+},
+
+{
+q:"Person who betrays his country",
+opt:["Mascot","Traitor","Icon","Paragon"],
+ans:"Traitor",
+
+explainQ:"Matlab jo apne desh ke saath gaddari kare.",
+
+optMeaning:{
+Mascot:"Lucky symbol",
+Traitor:"Desh drohi / betrayer",
+Icon:"Prateek ya famous person",
+Paragon:"Ideal example"
+},
+
+ansExplain:"Correct answer 'Traitor' hai kyunki apne country ko betray karne wale ko traitor bolte hain."
+},
+
+{
+q:"Child bereaved of one or both parents",
+opt:["Imposter","Imitator","Orphan","Imbecile"],
+ans:"Orphan",
+
+explainQ:"Matlab aisa bachcha jiske ek ya dono parents na rahe ho.",
+
+optMeaning:{
+Imposter:"Nakli vyakti / fraud",
+Imitator:"Copy karne wala",
+Orphan:"Anaath bachcha",
+Imbecile:"Bahut murkh vyakti"
+},
+
+ansExplain:"Correct answer 'Orphan' hai kyunki parents ke bina bachche ko orphan bolte hain."
+},
+
+{
+q:"Having consistency that does not yield to pressure",
+opt:["Substantial","Firm","Ramrod","Close"],
+ans:"Firm",
+
+explainQ:"Matlab jo pressure dene par bhi na jhuke ya shape na badle.",
+
+optMeaning:{
+Substantial:"Kaafi zyada / important",
+Firm:"Mazboot aur stable",
+Ramrod:"Bahut strict ya stiff",
+Close:"Paas ya shut"
+},
+
+ansExplain:"Correct answer 'Firm' hai kyunki firm cheez pressure me bhi stable rehti hai."
+},
+
+{
+q:"Person who enjoys dangerous activities foolishly",
+opt:["Cavalier","Lunatic","Gallant","Daredevil"],
+ans:"Daredevil",
+
+explainQ:"Matlab jo khatarnak kaam bina dare ya foolishly enjoy karta ho.",
+
+optMeaning:{
+Cavalier:"Casual ya arrogant",
+Lunatic:"Pagal vyakti",
+Gallant:"Bahadur aur polite",
+Daredevil:"Dangerous kaam karne wala fearless person"
+},
+
+ansExplain:"Correct answer 'Daredevil' hai kyunki dangerous activities enjoy karne wale ko daredevil bolte hain."
+},
+
+{
+q:"Forsaken or homeless child",
+opt:["Fugitive","Vulnerable","Miscreant","Waif"],
+ans:"Waif",
+
+explainQ:"Matlab aisa bachcha jo chhod diya gaya ho ya homeless ho.",
+
+optMeaning:{
+Fugitive:"Bhagoda",
+Vulnerable:"Kamzor / easily harmed",
+Miscreant:"Badmaash vyakti",
+Waif:"Homeless ya abandoned child"
+},
+
+ansExplain:"Correct answer 'Waif' hai kyunki homeless ya forsaken child ko waif bolte hain."
+},
+
+{
+q:"Gradual recovery of health",
+opt:["Convalescence","Potency","Benefaction","Rejuvenation"],
+ans:"Convalescence",
+
+explainQ:"Matlab bimari ke baad dheere-dheere health ka recover hona.",
+
+optMeaning:{
+Convalescence:"Recovery period after illness",
+Potency:"Power / strength",
+Benefaction:"Kind help",
+Rejuvenation:"Nayi energy ya youthfulness"
+},
+
+ansExplain:"Correct answer 'Convalescence' hai kyunki illness ke baad gradual recovery ko convalescence bolte hain."
+},
+
+{
+q:"Capable of being bent or pulled into shapes",
+opt:["Lithe","Willowy","Ductile","Lissome"],
+ans:"Ductile",
+
+explainQ:"Matlab jo easily bend ya shape kiya ja sake.",
+
+optMeaning:{
+Lithe:"Flexible body movement",
+Willowy:"Patla aur graceful",
+Ductile:"Easily bent or shaped",
+Lissome:"Flexible aur graceful"
+},
+
+ansExplain:"Correct answer 'Ductile' hai kyunki ductile cheez ko bend ya shape easily kiya ja sakta hai."
+},
+
+{
+q:"Someone who pretends under assumed character",
+opt:["Imposter","Imitator","Explorer","Imbecile"],
+ans:"Imposter",
+
+explainQ:"Matlab jo kisi aur ka roop ya identity pretend kare.",
+
+optMeaning:{
+Imposter:"Fake identity wala vyakti",
+Imitator:"Copy karne wala",
+Explorer:"Khoj karne wala",
+Imbecile:"Murkh vyakti"
+},
+
+ansExplain:"Correct answer 'Imposter' hai kyunki assumed character me pretend karne wale ko imposter bolte hain."
+},
+
+{
+q:"Waver between opinions or actions",
+opt:["Sway","Viaduct","Thrifty","Vacillate"],
+ans:"Vacillate",
+
+explainQ:"Matlab decision ya opinion ke beech baar-baar badalna ya confused rehna.",
+
+optMeaning:{
+Sway:"Hilna ya influence karna",
+Viaduct:"Bridge type structure",
+Thrifty:"Paise bachane wala",
+Vacillate:"Opinion ya decision me idhar-udhar hona"
+},
+
+ansExplain:"Correct answer 'Vacillate' hai kyunki opinions/actions ke beech waver karna vacillate hota hai."
+},
+
+{
+q:"By killing a large number of people, they thought they would get more benefits of the schemes.",
+opt:["Homicide","Suicide","Feticide","Genocide"],
+ans:"Genocide",
+
+explainQ:"Matlab bahut bade scale par logon ki hatya karna, khaaskar kisi community ya group ko target karke.",
+
+optMeaning:{
+Homicide:"Kisi dusre vyakti ki hatya",
+Suicide:"Khud ki jaan lena",
+Feticide:"Garbh me fetus ki hatya",
+Genocide:"Bade scale par kisi group/community ki mass killing"
+},
+
+ansExplain:"Correct answer 'Genocide' hai kyunki large number of people ki planned mass killing ko genocide bolte hain."
+},
+
+{
+q:"A group of worshippers",
+opt:["Congregation","Crowd","Caravan","Constellation"],
+ans:"Congregation",
+
+explainQ:"Matlab ibadat / prayer ke liye ikattha hua logon ka samuh.",
+
+optMeaning:{
+Congregation:"Worshippers ka group",
+Crowd:"Bheed",
+Caravan:"Saath travel karne wala group",
+Constellation:"Taaron ka samuh"
+},
+
+ansExplain:"Correct answer 'Congregation' hai kyunki worship karne wale logon ke group ko congregation bolte hain."
+},
+
+{
+q:"The place that a person treats as his permanent home, or lives in and has a substantial connection with",
+opt:["Oasis","Domicile","Embankment","Resort"],
+ans:"Domicile",
+
+explainQ:"Matlab kisi vyakti ka permanent ghar ya official rehne ki jagah.",
+
+optMeaning:{
+Oasis:"Registan me pani wali jagah",
+Domicile:"Permanent home / residence",
+Embankment:"Kinara ya raised bank",
+Resort:"Holiday place"
+},
+
+ansExplain:"Correct answer 'Domicile' hai kyunki permanent home ya residence ko domicile bolte hain."
+},
+
+{
+q:"Capable of turning easily from one task or field to another and able to do many things",
+opt:["Versatile","Turncoat","Talented","Flexible"],
+ans:"Versatile",
+
+explainQ:"Matlab jo kai tarah ke kaam aasani se kar sake aur alag-alag fields me adjust ho jaye.",
+
+optMeaning:{
+Versatile:"Multi-talented / adaptable",
+Turncoat:"Jo side badal de / betrayer",
+Talented:"Hunarmand",
+Flexible:"Easily bend ya adjust hone wala"
+},
+
+ansExplain:"Correct answer 'Versatile' hai kyunki versatile person kai kaam efficiently kar sakta hai."
+},
+
+{
+q:"A big clumsy often slow-witted person",
+opt:["Slouch","Chump","Oaf","Ape"],
+ans:"Oaf",
+
+explainQ:"Matlab bada, awkward aur thoda slow ya foolish insaan.",
+
+optMeaning:{
+Slouch:"Jhuka hua chalna / lazy person",
+Chump:"Bewakoof vyakti",
+Oaf:"Big, clumsy aur slow-witted person",
+Ape:"Bandar / mimic karna"
+},
+
+ansExplain:"Correct answer 'Oaf' hai kyunki clumsy aur dull person ko oaf bolte hain."
+},
+
+{
+q:"One who cannot hear",
+opt:["Illegible","Inaudible","Dumb","Deaf"],
+ans:"Deaf",
+
+explainQ:"Matlab jo sun nahi sakta.",
+
+optMeaning:{
+Illegible:"Jo padha na ja sake",
+Inaudible:"Jo suna na ja sake",
+Dumb:"Bol nahi sakta (old usage)",
+Deaf:"Jo sun nahi sakta"
+},
+
+ansExplain:"Correct answer 'Deaf' hai kyunki hearing ability na hone wale vyakti ko deaf bolte hain."
+},
+
+{
+q:"Causing or wanting to cause harm or evil to someone",
+opt:["Chaotic","Malevolent","Insipid","Rancour"],
+ans:"Malevolent",
+
+explainQ:"Matlab kisi ko nuksan pahunchane ya burai chahne wala.",
+
+optMeaning:{
+Chaotic:"Bikharā hua / disorderly",
+Malevolent:"Dusron ke liye evil intention rakhne wala",
+Insipid:"Boring / tasteless",
+Rancour:"Kadwahat ya deep hatred"
+},
+
+ansExplain:"Correct answer 'Malevolent' hai kyunki evil ya harmful intention ko malevolent bolte hain."
+},
+
+{
+q:"Causing or ending in death",
+opt:["Gruesome","Foster","Fatal","Grotesque"],
+ans:"Fatal",
+
+explainQ:"Matlab jo maut ka karan bane ya death me end ho.",
+
+optMeaning:{
+Gruesome:"Darawna / horrifying",
+Foster:"Palan-poshan karna",
+Fatal:"Deadly / causing death",
+Grotesque:"Strange aur ugly"
+},
+
+ansExplain:"Correct answer 'Fatal' hai kyunki death cause karne wali cheez fatal hoti hai."
+},
+
+{
+q:"A person whose age is between 70 and 79 years old",
+opt:["Septuagenarian","Aged","Pensioner","Oldie"],
+ans:"Septuagenarian",
+
+explainQ:"Matlab 70 se 79 saal ke beech ki age wala vyakti.",
+
+optMeaning:{
+Septuagenarian:"70–79 years age group person",
+Aged:"Buzurg",
+Pensioner:"Pension lene wala vyakti",
+Oldie:"Old person (informal)"
+},
+
+ansExplain:"Correct answer 'Septuagenarian' hai kyunki 70–79 years ke person ko septuagenarian bolte hain."
+}
+
+
+
+
+
+];
+
+let current=0;
+let answers={};
+let time=900;
+let interval;
+let submitted=false;
+
+function playSound(id){
+  document.getElementById(id).play();
+}
+
+function loadQ(){
+  let q=questions[current];
+  document.getElementById("question").innerText="Q"+(current+1)+". "+q.q;
+
+  let optDiv=document.getElementById("options");
+  optDiv.innerHTML="";
+
+  q.opt.forEach(o=>{
+    let d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+
+    if(answers[current]==o) d.classList.add("selected");
+
+    d.onclick=()=>{
+      if(submitted) return;
+
+      playSound("clickSound");
+      answers[current]=o;
+
+      document.querySelectorAll(".option")
+      .forEach(x=>x.classList.remove("selected"));
+
+      d.classList.add("selected");
+      document.getElementById("btn"+current).classList.add("attempted");
+    };
+
+    optDiv.appendChild(d);
+  });
+
+  if(submitted) review();
+}
+
+function showQuestionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Meaning of Question</h3>
+    <p>${q.explainQ}</p>
+  `;
+}
+
+function showOptionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Option Meaning</h3>
+    <ul>
+      ${q.opt.map(o=>`<li><b>${o}</b> → ${q.optMeaning[o]}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function hideInfo(){
+  document.getElementById("infoBox").style.display="none";
+}
+
+function review(){
+  let q=questions[current];
+
+  document.querySelectorAll(".option").forEach(opt=>{
+    opt.classList.remove("selected");
+
+    if(opt.innerText===q.ans){
+      opt.classList.add("correct");
+    }
+
+    if(
+      answers[current] &&
+      answers[current]!==q.ans &&
+      opt.innerText===answers[current]
+    ){
+      opt.classList.add("wrong");
+    }
+  });
+
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#22c55e;">Correct Answer</h3>
+    <p><b>Answer:</b> ${q.ans}</p>
+    <p>${q.ansExplain}</p>
+  `;
+}
+
+function createPanel(){
+  let p=document.getElementById("panel");
+  questions.forEach((_,i)=>{
+    let b=document.createElement("button");
+    b.innerText=i+1;
+    b.className="qbtn";
+    b.id="btn"+i;
+    b.onclick=()=>{ current=i; loadQ(); };
+    p.appendChild(b);
+  });
+}
+
+function nextQ(){
+  if(current<questions.length-1){
+    current++;
+    loadQ();
+  }else{
+    submitQuiz();
+  }
+}
+
+function clearAns(){
+  if(!submitted){
+    delete answers[current];
+    loadQ();
+  }
+}
+
+function submitQuiz(){
+  submitted=true;
+  playSound("submitSound");
+  clearInterval(interval);
+
+  let c=0,w=0;
+
+  questions.forEach((q,i)=>{
+    if(!answers[i]) return;
+    if(answers[i]===q.ans) c++;
+    else w++;
+  });
+
+  let score=c-(w*0.25);
+  let percent=(score/questions.length)*100;
+
+  document.getElementById("result").innerHTML=`
+    <h3>Score: ${score}</h3>
+    <p>Correct: ${c} | Wrong: ${w}</p>
+    <p>Percent: ${percent.toFixed(2)}%</p>
+  `;
+
+  loadQ();
+}
+
+function timerRun(){
+  interval=setInterval(()=>{
+    time--;
+
+    let m=Math.floor(time/60);
+    let s=time%60;
+
+    document.getElementById("timer").innerText=
+      `${m}:${s<10?"0":s}`;
+
+    if(time<=0) submitQuiz();
+  },1000);
+}
+
+createPanel();
+loadQ();
+timerRun();
+
+</script>
+
+</body>
+</html>
+```

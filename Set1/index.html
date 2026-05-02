@@ -1,0 +1,766 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+}
+.header{
+  text-align:center;
+  padding:15px;
+  background:#dc2626;
+  font-size:20px;
+  font-weight:bold;
+}
+.main{
+  display:flex;
+  flex-wrap:wrap;
+  width:95%;
+  margin:auto;
+}
+.left{ flex:2; }
+.right{ flex:1; }
+
+.card{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin:10px;
+  box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+.option{
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  background:#1f2937;
+  cursor:pointer;
+  transition:.2s;
+}
+.option:hover{ background:#374151; }
+
+.selected{ background:#2563eb !important; }
+.correct{ background:#16a34a !important; }
+.wrong{ background:#dc2626 !important; }
+
+button{
+  padding:10px 14px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+}
+.primary{ background:#2563eb; }
+.danger{ background:#dc2626; }
+.submit{ background:#16a34a; }
+.info{ background:#7c3aed; }
+.orange{ background:#f59e0b; color:black; }
+.gray{ background:#475569; }
+
+.qbtn{
+  width:40px;
+  height:40px;
+  margin:4px;
+  border:none;
+  border-radius:6px;
+  background:#374151;
+  color:white;
+  cursor:pointer;
+}
+.attempted{ background:#f59e0b !important; }
+
+.timer{
+  color:#facc15;
+  font-size:18px;
+  font-weight:bold;
+}
+
+#infoBox{
+  display:none;
+  margin-top:18px;
+  padding:15px;
+  border-radius:10px;
+  background:#0f172a;
+  border:1px solid #334155;
+  line-height:1.7;
+}
+
+ul{ padding-left:20px; }
+
+@media(max-width:768px){
+  .main{ flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</div>
+
+<div style="text-align:center;padding:10px;">
+⏱ Time Left: <span id="timer" class="timer">15:00</span>
+</div>
+
+<div class="main">
+
+  <div class="left">
+    <div class="card">
+
+      <h3 id="question"></h3>
+      <div id="options"></div>
+
+      <button class="primary" onclick="nextQ()">Save & Next</button>
+      <button class="danger" onclick="clearAns()">Clear</button>
+      <button class="submit" onclick="submitQuiz()">Submit</button>
+      <button class="info" onclick="showQuestionMeaning()">Meaning of Question</button>
+      <button class="orange" onclick="showOptionMeaning()">Option Meaning</button>
+      <button class="gray" onclick="hideInfo()">Hide Meaning</button>
+
+      <div id="infoBox"></div>
+      <div id="result"></div>
+
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>Questions</h3>
+      <div id="panel"></div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="submitSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+
+let questions = [
+
+{
+q:"Because the politician's speech was high-flown and pretentious, it gained popularity.",
+opt:["bombastic","austere","schematising","mnemonic"],
+ans:"bombastic",
+
+explainQ:"Matlab neta ka speech bahut zyada fancy, show-off aur bhaari-bharkam shabdon se bhara hua tha, isliye wo famous ho gaya.",
+
+optMeaning:{
+bombastic:"Bahut zyada fancy, heavy aur show-off wali language",
+austere:"Simple, strict aur bina decoration wala",
+schematising:"Planning ya structure banana",
+mnemonic:"Yaad rakhne ki technique"
+},
+
+ansExplain:"Correct answer 'bombastic' hai kyunki high-flown aur pretentious speech ka matlab over-fancy aur showy language hota hai."
+},
+
+{
+q:"The minister went to visit the monuments set up for people who were buried in other countries.",
+opt:["graves","cemetery","cenotaphs","coffins"],
+ans:"cenotaphs",
+
+explainQ:"Matlab minister un yaadgaar smarak ko dekhne gaya jo un logon ke naam par banaye gaye the jinhe kahin aur dafnaya gaya tha.",
+
+optMeaning:{
+graves:"Kabar / qabr",
+cemetery:"Kabristan / burial ground",
+cenotaphs:"Memorial monument jo kisi ki yaad me banaya jata hai",
+coffins:"Dead body rakhne ka wooden box"
+},
+
+ansExplain:"Correct answer 'cenotaphs' hai kyunki ye memorial hota hai un logon ke liye jo kahin aur buried hote hain."
+},
+
+{
+q:"Exactly the same words as were used originally.",
+opt:["Factual","Ornate","Precise","Verbatim"],
+ans:"Verbatim",
+
+explainQ:"Matlab bilkul wahi exact shabd jo originally bole ya likhe gaye the.",
+
+optMeaning:{
+Factual:"Fact par based",
+Ornate:"Sajaya hua ya decorative",
+Precise:"Bilkul exact",
+Verbatim:"Word to word exactly same"
+},
+
+ansExplain:"Correct answer 'Verbatim' hai kyunki iska meaning hota hai bilkul same words ko repeat karna."
+},
+
+{
+q:"A room in a hospital used especially for sunbathing or therapeutic exposure to light.",
+opt:["Sanatorium","Solarium","Planetarium","Podium"],
+ans:"Solarium",
+
+explainQ:"Matlab hospital ka aisa room jahan sunlight ya light therapy di jati hai health improve karne ke liye.",
+
+optMeaning:{
+Sanatorium:"Health recovery center / aarogya kendra",
+Solarium:"Sunlight therapy room",
+Planetarium:"Stars aur planets dekhne ki jagah",
+Podium:"Stage ya speaking platform"
+},
+
+ansExplain:"Correct answer 'Solarium' hai kyunki ye specially sunlight ya light therapy ke liye room hota hai."
+},
+
+{
+q:"The place where soldiers live.",
+opt:["Unit","Regiment","Brigade","Barracks"],
+ans:"Barracks",
+
+explainQ:"Matlab wo jagah jahan soldiers rehte hain.",
+
+optMeaning:{
+Unit:"Ek group / unit",
+Regiment:"Army ki ek badi unit",
+Brigade:"Army formation",
+Barracks:"Soldiers ke rehne ki jagah"
+},
+
+ansExplain:"Correct answer 'Barracks' hai kyunki soldiers ka residential building barracks kehlata hai."
+},
+
+{
+q:"The analysis of a person's handwriting to determine his/her personality.",
+opt:["Numismatics","Graphology","Philology","Calligraphy"],
+ans:"Graphology",
+
+explainQ:"Matlab handwriting ko dekhkar kisi insaan ki personality judge karna.",
+
+optMeaning:{
+Numismatics:"Coins ka study",
+Graphology:"Handwriting analysis",
+Philology:"Language ka historical study",
+Calligraphy:"Beautiful handwriting art"
+},
+
+ansExplain:"Correct answer 'Graphology' hai kyunki handwriting analysis ko graphology bolte hain."
+},
+
+{
+q:"The branch of geography that studies mountains and their formation.",
+opt:["Palaeography","Orthography","Orography","Mythography"],
+ans:"Orography",
+
+explainQ:"Matlab geography ki wo branch jo mountains aur unki formation ko study karti hai.",
+
+optMeaning:{
+Palaeography:"Ancient writing ka study",
+Orthography:"Correct spelling system",
+Orography:"Mountains ka study",
+Mythography:"Myths ka description"
+},
+
+ansExplain:"Correct answer 'Orography' hai kyunki ye mountains ke study se related term hai."
+},
+
+{
+q:"A policy that separates people on the basis of race.",
+opt:["Apostasy","Apartheid","Apostle","Apiary"],
+ans:"Apartheid",
+
+explainQ:"Matlab aisi policy jo logon ko race/colour ke basis par alag karti hai.",
+
+optMeaning:{
+Apostasy:"Religion chhod dena",
+Apartheid:"Racial separation policy",
+Apostle:"Religious messenger",
+Apiary:"Madhumakkhi palan ki jagah"
+},
+
+ansExplain:"Correct answer 'Apartheid' hai kyunki ye race ke basis par discrimination/separation ki policy thi."
+},
+
+{
+q:"The tailor was called to stitch long loose gowns worn by priests and choristers.",
+opt:["Frocks","Cassocks","Petticoats","Tuxedos"],
+ans:"Cassocks",
+
+explainQ:"Matlab tailor ko aise lambe loose kapde silne bulaya gaya jo priests aur church singers pehente hain.",
+
+optMeaning:{
+Frocks:"Dress / gown",
+Cassocks:"Priests ka long robe",
+Petticoats:"Inner skirt",
+Tuxedos:"Formal suit"
+},
+
+ansExplain:"Correct answer 'Cassocks' hai kyunki priests ka traditional long gown cassock kehlata hai."
+},
+
+{
+q:"Can you please stop continuously complaining about the student's shortcomings?",
+opt:["Grunting","Crying","Whining","Jesting"],
+ans:"Whining",
+
+explainQ:"Matlab student ki kamiyaan baar-baar complain karna band karo.",
+
+optMeaning:{
+Grunting:"Ghurghurana ya rough sound nikalna",
+Crying:"Rona",
+Whining:"Lagataar complain karna",
+Jesting:"Mazaak karna"
+},
+
+ansExplain:"Correct answer 'Whining' hai kyunki continuously complain karna whining hota hai."
+},
+
+{
+q:"Can you please stop continuously complaining about the student's shortcomings?",
+opt:["Grunting","Crying","Whining","Jesting"],
+ans:"Whining",
+
+explainQ:"Matlab student ki kamiyon ke baare me baar-baar complain karna band karo.",
+
+optMeaning:{
+Grunting:"Ghurghurana ya rough sound nikalna",
+Crying:"Rona",
+Whining:"Lagataar complain karna",
+Jesting:"Mazaak karna"
+},
+
+ansExplain:"Correct answer 'Whining' hai kyunki continuously complain karna whining kehlata hai."
+},
+
+{
+q:"The old library had a musty smell from years of neglect.",
+opt:["Casual","Foggy","Stale","Fresh"],
+ans:"Stale",
+
+explainQ:"Matlab purani library se band aur purani si smell aa rahi thi kyunki saalon se uska dhyan nahi rakha gaya.",
+
+optMeaning:{
+Casual:"Normal ya ordinary",
+Foggy:"Dhundhla",
+Stale:"Purana, basi ya band smell wala",
+Fresh:"Taaza"
+},
+
+ansExplain:"Correct answer 'Stale' hai kyunki musty smell ka meaning old/basi smell hota hai."
+},
+
+{
+q:"The land that is best suitable for growing crops.",
+opt:["Arable","Barren","Fruitful","Rustic"],
+ans:"Arable",
+
+explainQ:"Matlab aisi zameen jo kheti ke liye sabse suitable ho.",
+
+optMeaning:{
+Arable:"Kheti yogya zameen",
+Barren:"Banjar zameen",
+Fruitful:"Productive / phal dene wala",
+Rustic:"Gaon jaisa simple"
+},
+
+ansExplain:"Correct answer 'Arable' hai kyunki arable land farming ke liye suitable hoti hai."
+},
+
+{
+q:"A serpent having many heads in Greek mythology.",
+opt:["Hydra","Python","Cobra","Eopsin"],
+ans:"Hydra",
+
+explainQ:"Matlab Greek mythology ka wo saanp jiske kai sir hote the.",
+
+optMeaning:{
+Hydra:"Many-headed mythical serpent",
+Python:"Ek bada saanp",
+Cobra:"Naag",
+Eopsin:"Irrelevant option"
+},
+
+ansExplain:"Correct answer 'Hydra' hai kyunki Greek mythology me many-headed serpent Hydra tha."
+},
+
+{
+q:"She is proficient in speaking many languages.",
+opt:["Monolithic","Multilingual","Heterolinguistic","Bilingual"],
+ans:"Multilingual",
+
+explainQ:"Matlab wo bahut saari languages bolne me expert hai.",
+
+optMeaning:{
+Monolithic:"Ek hi structure / single type",
+Multilingual:"Kai bhaasha bolne wala",
+Heterolinguistic:"Different languages se related",
+Bilingual:"Do bhaasha bolne wala"
+},
+
+ansExplain:"Correct answer 'Multilingual' hai kyunki many languages bolne wale ko multilingual kehte hain."
+},
+
+{
+q:"A person who likes to argue about anything.",
+opt:["Reticent","Coward","Veracious","Contentious"],
+ans:"Contentious",
+
+explainQ:"Matlab aisa vyakti jo har baat par debate ya argue karta ho.",
+
+optMeaning:{
+Reticent:"Kam bolne wala",
+Coward:"Darpok",
+Veracious:"Sach bolne wala",
+Contentious:"Jhagda / argument karne wala"
+},
+
+ansExplain:"Correct answer 'Contentious' hai kyunki argumentative person ko contentious bolte hain."
+},
+
+{
+q:"Unit of weight for precious stones.",
+opt:["Pure","Reliable","Carat","Accurate"],
+ans:"Carat",
+
+explainQ:"Matlab heera, sona ya precious stones naapne ki weight unit.",
+
+optMeaning:{
+Pure:"Shuddh",
+Reliable:"Bharosemand",
+Carat:"Gemstone weight unit",
+Accurate:"Sahi / exact"
+},
+
+ansExplain:"Correct answer 'Carat' hai kyunki precious stones carat me measure kiye jate hain."
+},
+
+{
+q:"One who does not show response to good or bad.",
+opt:["Stoic","Sceptic","Cynic","Phobic"],
+ans:"Stoic",
+
+explainQ:"Matlab aisa insaan jo achha ya bura kuch bhi ho, zyada reaction nahi deta.",
+
+optMeaning:{
+Stoic:"Emotion control karne wala, reactionless",
+Sceptic:"Sandeh karne wala",
+Cynic:"Negative soch wala",
+Phobic:"Dar se related"
+},
+
+ansExplain:"Correct answer 'Stoic' hai kyunki stoic person emotions ko bahar nahi dikhata."
+},
+
+{
+q:"Morbid compulsion to consume alcohol continuously.",
+opt:["Satyromania","Maniac","Kleptomania","Dipsomania"],
+ans:"Dipsomania",
+
+explainQ:"Matlab sharab peene ki dangerous aur uncontrollable aadat.",
+
+optMeaning:{
+Satyromania:"Excessive sexual obsession",
+Maniac:"Pagalpan ya extreme obsession",
+Kleptomania:"Chori karne ki uncontrollable habit",
+Dipsomania:"Alcohol peene ki uncontrollable craving"
+},
+
+ansExplain:"Correct answer 'Dipsomania' hai kyunki ye alcohol addiction ke liye use hota hai."
+},
+
+{
+q:"The question papers are placed in the lockers of the school in a way that they can't be reached.",
+opt:["are irrepressible","are inaccessible","are affordable","are affable"],
+ans:"are inaccessible",
+
+explainQ:"Matlab question papers lockers me itne safely rakhe gaye hain ki un tak pahunchna possible nahi hai.",
+
+optMeaning:{
+"are irrepressible":"Jise control na kiya ja sake",
+"are inaccessible":"Jahan tak pahunch na ho sake",
+"are affordable":"Jo kharidne layak ho",
+"are affable":"Friendly nature ka"
+},
+
+ansExplain:"Correct answer 'are inaccessible' hai kyunki papers tak reach nahi kiya ja sakta."
+},
+
+{
+q:"An order of law requiring people to remain indoors.",
+opt:["Restriction","Curfew","Limit","Check in"],
+ans:"Curfew",
+
+explainQ:"Matlab kanooni order jisme logon ko ghar ke andar rehna hota hai.",
+
+optMeaning:{
+Restriction:"Pabandi",
+Curfew:"Ghar se bahar nikalne par rok",
+Limit:"Seema",
+"Check in":"Entry register karna"
+},
+
+ansExplain:"Correct answer 'Curfew' hai kyunki curfew me logon ko indoors rehna padta hai."
+},
+
+{
+q:"A person who sells and arranges cut flowers.",
+opt:["Horticulturist","Botanist","Gardener","Florist"],
+ans:"Florist",
+
+explainQ:"Matlab jo phool bechta hai aur bouquet ya decoration arrange karta hai.",
+
+optMeaning:{
+Horticulturist:"Plant cultivation expert",
+Botanist:"Plants scientist",
+Gardener:"Mali",
+Florist:"Flower seller / arranger"
+},
+
+ansExplain:"Correct answer 'Florist' hai kyunki florist flowers arrange aur sell karta hai."
+},
+
+{
+q:"A government by the officials.",
+opt:["Autocracy","Bureaucracy","Monarchy","Plutocracy"],
+ans:"Bureaucracy",
+
+explainQ:"Matlab aisi government jahan officials / officers ka control zyada ho.",
+
+optMeaning:{
+Autocracy:"Ek vyakti ka rule",
+Bureaucracy:"Officials ke through government",
+Monarchy:"Raja ka rule",
+Plutocracy:"Rich logon ka rule"
+},
+
+ansExplain:"Correct answer 'Bureaucracy' hai kyunki bureaucracy me officials system chalate hain."
+},
+
+{
+q:"An often-imaginary place or state of utter perfection and happiness.",
+opt:["Inferno","Dystopia","Euphoria","Utopia"],
+ans:"Utopia",
+
+explainQ:"Matlab ek perfect aur khushhaal imaginary duniya.",
+
+optMeaning:{
+Inferno:"Narak / hell",
+Dystopia:"Buri imaginary society",
+Euphoria:"Extreme happiness feeling",
+Utopia:"Perfect imaginary world"
+},
+
+ansExplain:"Correct answer 'Utopia' hai kyunki perfect imaginary society ko utopia bolte hain."
+},
+
+{
+q:"Fear of closed spaces.",
+opt:["Photophobia","Optophobia","Agoraphobia","Claustrophobia"],
+ans:"Claustrophobia",
+
+explainQ:"Matlab band jagah ya confined space ka dar.",
+
+optMeaning:{
+Photophobia:"Light ka dar",
+Optophobia:"Eyes kholne ka dar",
+Agoraphobia:"Open/public places ka dar",
+Claustrophobia:"Closed spaces ka dar"
+},
+
+ansExplain:"Correct answer 'Claustrophobia' hai kyunki ye closed spaces ke fear ko bolte hain."
+},
+
+{
+q:"A person who loves music",
+opt:["Astrophile","Chromatophilic","Discophile","Melophile"],
+ans:"Melophile",
+
+explainQ:"Matlab aisa vyakti jise music se bahut pyaar ho.",
+
+optMeaning:{
+Astrophile:"Stars/space lover",
+Chromatophilic:"Colors lover",
+Discophile:"Records/music collector",
+Melophile:"Music lover"
+},
+
+ansExplain:"Correct answer 'Melophile' hai kyunki music lover ko melophile kehte hain."
+}
+
+];
+
+let current=0;
+let answers={};
+let time=900;
+let interval;
+let submitted=false;
+
+function playSound(id){
+  document.getElementById(id).play();
+}
+
+function loadQ(){
+  let q=questions[current];
+  document.getElementById("question").innerText="Q"+(current+1)+". "+q.q;
+
+  let optDiv=document.getElementById("options");
+  optDiv.innerHTML="";
+
+  q.opt.forEach(o=>{
+    let d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+
+    if(answers[current]==o) d.classList.add("selected");
+
+    d.onclick=()=>{
+      if(submitted) return;
+
+      playSound("clickSound");
+      answers[current]=o;
+
+      document.querySelectorAll(".option")
+      .forEach(x=>x.classList.remove("selected"));
+
+      d.classList.add("selected");
+      document.getElementById("btn"+current).classList.add("attempted");
+    };
+
+    optDiv.appendChild(d);
+  });
+
+  if(submitted) review();
+}
+
+function showQuestionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Meaning of Question</h3>
+    <p>${q.explainQ}</p>
+  `;
+}
+
+function showOptionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Option Meaning</h3>
+    <ul>
+      ${q.opt.map(o=>`<li><b>${o}</b> → ${q.optMeaning[o]}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function hideInfo(){
+  document.getElementById("infoBox").style.display="none";
+}
+
+function review(){
+  let q=questions[current];
+
+  document.querySelectorAll(".option").forEach(opt=>{
+    opt.classList.remove("selected");
+
+    if(opt.innerText===q.ans){
+      opt.classList.add("correct");
+    }
+
+    if(
+      answers[current] &&
+      answers[current]!==q.ans &&
+      opt.innerText===answers[current]
+    ){
+      opt.classList.add("wrong");
+    }
+  });
+
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#22c55e;">Correct Answer</h3>
+    <p><b>Answer:</b> ${q.ans}</p>
+    <p>${q.ansExplain}</p>
+  `;
+}
+
+function createPanel(){
+  let p=document.getElementById("panel");
+  questions.forEach((_,i)=>{
+    let b=document.createElement("button");
+    b.innerText=i+1;
+    b.className="qbtn";
+    b.id="btn"+i;
+    b.onclick=()=>{ current=i; loadQ(); };
+    p.appendChild(b);
+  });
+}
+
+function nextQ(){
+  if(current<questions.length-1){
+    current++;
+    loadQ();
+  }else{
+    submitQuiz();
+  }
+}
+
+function clearAns(){
+  if(!submitted){
+    delete answers[current];
+    loadQ();
+  }
+}
+
+function submitQuiz(){
+  submitted=true;
+  playSound("submitSound");
+  clearInterval(interval);
+
+  let c=0,w=0;
+
+  questions.forEach((q,i)=>{
+    if(!answers[i]) return;
+    if(answers[i]===q.ans) c++;
+    else w++;
+  });
+
+  let score=c-(w*0.25);
+  let percent=(score/questions.length)*100;
+
+  document.getElementById("result").innerHTML=`
+    <h3>Score: ${score}</h3>
+    <p>Correct: ${c} | Wrong: ${w}</p>
+    <p>Percent: ${percent.toFixed(2)}%</p>
+  `;
+
+  loadQ();
+}
+
+function timerRun(){
+  interval=setInterval(()=>{
+    time--;
+
+    let m=Math.floor(time/60);
+    let s=time%60;
+
+    document.getElementById("timer").innerText=
+      `${m}:${s<10?"0":s}`;
+
+    if(time<=0) submitQuiz();
+  },1000);
+}
+
+createPanel();
+loadQ();
+timerRun();
+
+</script>
+
+</body>
+</html>
+```

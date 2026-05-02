@@ -1,0 +1,871 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+}
+.header{
+  text-align:center;
+  padding:15px;
+  background:#dc2626;
+  font-size:20px;
+  font-weight:bold;
+}
+.main{
+  display:flex;
+  flex-wrap:wrap;
+  width:95%;
+  margin:auto;
+}
+.left{ flex:2; }
+.right{ flex:1; }
+
+.card{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin:10px;
+  box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+.option{
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  background:#1f2937;
+  cursor:pointer;
+  transition:.2s;
+}
+.option:hover{ background:#374151; }
+
+.selected{ background:#2563eb !important; }
+.correct{ background:#16a34a !important; }
+.wrong{ background:#dc2626 !important; }
+
+button{
+  padding:10px 14px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+}
+.primary{ background:#2563eb; }
+.danger{ background:#dc2626; }
+.submit{ background:#16a34a; }
+.info{ background:#7c3aed; }
+.orange{ background:#f59e0b; color:black; }
+.gray{ background:#475569; }
+
+.qbtn{
+  width:40px;
+  height:40px;
+  margin:4px;
+  border:none;
+  border-radius:6px;
+  background:#374151;
+  color:white;
+  cursor:pointer;
+}
+.attempted{ background:#f59e0b !important; }
+
+.timer{
+  color:#facc15;
+  font-size:18px;
+  font-weight:bold;
+}
+
+#infoBox{
+  display:none;
+  margin-top:18px;
+  padding:15px;
+  border-radius:10px;
+  background:#0f172a;
+  border:1px solid #334155;
+  line-height:1.7;
+}
+
+ul{ padding-left:20px; }
+
+@media(max-width:768px){
+  .main{ flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</div>
+
+<div style="text-align:center;padding:10px;">
+⏱ Time Left: <span id="timer" class="timer">15:00</span>
+</div>
+
+<div class="main">
+
+  <div class="left">
+    <div class="card">
+
+      <h3 id="question"></h3>
+      <div id="options"></div>
+
+      <button class="primary" onclick="nextQ()">Save & Next</button>
+      <button class="danger" onclick="clearAns()">Clear</button>
+      <button class="submit" onclick="submitQuiz()">Submit</button>
+      <button class="info" onclick="showQuestionMeaning()">Meaning of Question</button>
+      <button class="orange" onclick="showOptionMeaning()">Option Meaning</button>
+      <button class="gray" onclick="hideInfo()">Hide Meaning</button>
+
+      <div id="infoBox"></div>
+      <div id="result"></div>
+
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>Questions</h3>
+      <div id="panel"></div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="submitSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+
+let questions = [
+
+{
+q:"Based on chance rather than on reason or a plan",
+opt:["Extraordinary","Unique","Arbitrary","Ordinary"],
+ans:"Arbitrary",
+
+explainQ:"Matlab bina kisi reason ya plan ke, sirf chance par based hona.",
+
+optMeaning:{
+Extraordinary:"Asadharan",
+Unique:"Anokha",
+Arbitrary:"Bina reason ke / manmaana",
+Ordinary:"Samanya"
+},
+
+ansExplain:"Correct answer 'Arbitrary' hai kyunki yeh chance ya random decision par based hota hai."
+},
+
+{
+q:"In an enthusiastic way",
+opt:["Encouragingly","Unfeelingly","Earnestly","Heartily"],
+ans:"Heartily",
+
+explainQ:"Matlab puri energy aur enthusiasm ke saath kaam karna ya behave karna.",
+
+optMeaning:{
+Encouragingly:"Himmat dene wala tarike se",
+Unfeelingly:"Bina emotions ke",
+Earnestly:"Gambhir tareeke se",
+Heartily:"Dil se / josh se"
+},
+
+ansExplain:"Correct answer 'Heartily' hai kyunki enthusiastic way ko heartily kehte hain."
+},
+
+{
+q:"Withdraw from a forward position in battle",
+opt:["Retreat","Resort","Restore","Relocate"],
+ans:"Retreat",
+
+explainQ:"Matlab jang me aage ki position se peeche hatna.",
+
+optMeaning:{
+Retreat:"Peeche hatna",
+Resort:"Akhri upay",
+Restore:"Wapas sthapit karna",
+Relocate:"Jagah badalna"
+},
+
+ansExplain:"Correct answer 'Retreat' hai kyunki battle me back jana retreat hota hai."
+},
+
+{
+q:"Eat or drink food quickly and in large amounts",
+opt:["Choke","Sip","Gulp","Swish"],
+ans:"Gulp",
+
+explainQ:"Matlab bahut jaldi aur zyada matra me khana ya peena.",
+
+optMeaning:{
+Choke:"Ghutna",
+Sip:"Thoda thoda peena",
+Gulp:"Ek saath jaldi peena",
+Swish:"Ghumana"
+},
+
+ansExplain:"Correct answer 'Gulp' hai kyunki quickly consume karna gulp hota hai."
+},
+
+{
+q:"A person who formally requests something, especially a job",
+opt:["Applicant","Trainee","Contestant","Nominee"],
+ans:"Applicant",
+
+explainQ:"Matlab job ya kisi position ke liye formally apply karne wala person.",
+
+optMeaning:{
+Applicant:"Avedak",
+Trainee:"Prashikshu",
+Contestant:"Pratiyogi",
+Nominee:"Naamankit vyakti"
+},
+
+ansExplain:"Correct answer 'Applicant' hai kyunki job ke liye apply karne wala hota hai."
+},
+
+{
+q:"A period of two weeks",
+opt:["Month","Century","Decade","Fortnight"],
+ans:"Fortnight",
+
+explainQ:"Matlab 14 din ya do hafton ka samay.",
+
+optMeaning:{
+Month:"Mahina",
+Century:"Sadi",
+Decade:"Dashak",
+Fortnight:"Do hafton ka samay"
+},
+
+ansExplain:"Correct answer 'Fortnight' hai kyunki 14 din ka period hota hai."
+},
+
+{
+q:"Something which cannot be taken by force",
+opt:["Impregnable","Irresistible","Imperative","Impromptu"],
+ans:"Impregnable",
+
+explainQ:"Matlab jo itna strong ho ki force se capture na kiya ja sake.",
+
+optMeaning:{
+Impregnable:"Ajeet / na jeeta ja sake",
+Irresistible:"Akarshit karne wala",
+Imperative:"Aavashyak",
+Impromptu:"Bina taiyari ke"
+},
+
+ansExplain:"Correct answer 'Impregnable' hai kyunki force se capture nahi hota."
+},
+
+{
+q:"A strong interest in something or someone",
+opt:["Fixation","Empathy","Apathy","Attachment"],
+ans:"Fixation",
+
+explainQ:"Matlab kisi cheez ya vyakti ke prati bahut zyada interest ya obsession.",
+
+optMeaning:{
+Fixation:"Gehra lagav / obsession",
+Empathy:"Samvedana",
+Apathy:"Udasinata",
+Attachment:"Lagav"
+},
+
+ansExplain:"Correct answer 'Fixation' hai kyunki strong obsessive interest ko fixation kehte hain."
+},
+
+{
+q:"Leather straps put around a horse's head to control it",
+opt:["Bridle","Bridal","Saddle","Stirrup"],
+ans:"Bridle",
+
+explainQ:"Matlab horse ko control karne ke liye lagaya jane wala straps.",
+
+optMeaning:{
+Bridle:"Horse control strap",
+Bridal:"Shaadi se related",
+Saddle:"Ghoda baithne ki seat",
+Stirrup:"Pair rakhne ka support"
+},
+
+ansExplain:"Correct answer 'Bridle' hai kyunki horse control karne ke liye hota hai."
+},
+
+{
+q:"A quick, sudden movement",
+opt:["Flick","Fleck","Dust","Speck"],
+ans:"Flick",
+
+explainQ:"Matlab jaldi aur chhoti sudden movement.",
+
+optMeaning:{
+Flick:"Tez chhota movement",
+Fleck:"Daag",
+Dust:"Dhool",
+Speck:"Chhota sa kankar ya particle"
+},
+
+ansExplain:"Correct answer 'Flick' hai kyunki quick sudden movement ko flick bolte hain."
+},
+
+{
+q:"One who investigates and solves crimes",
+opt:["Lawyer","Criminal","Detective","Journalist"],
+ans:"Detective",
+
+explainQ:"Matlab aisa vyakti jo crimes ki investigation karke unka solution nikalta hai.",
+
+optMeaning:{
+Lawyer:"Vakeel",
+Criminal:"Apradhi",
+Detective:"Jasoos / crime investigator",
+Journalist:"Patrakar"
+},
+
+ansExplain:"Correct answer 'Detective' hai kyunki crimes solve karne wala detective hota hai."
+},
+
+{
+q:"A hunting weapon which comes back, used by Australian Aborigines",
+opt:["Harpoon","Cutlass","Slingshot","Boomerang"],
+ans:"Boomerang",
+
+explainQ:"Matlab aisa weapon jo throw karne ke baad wapas aa jata hai.",
+
+optMeaning:{
+Harpoon:"Machhli pakadne ka teer",
+Cutlass:"Talwar",
+Slingshot:"Gulel",
+Boomerang:"Wapas aane wala weapon"
+},
+
+ansExplain:"Correct answer 'Boomerang' hai kyunki yeh throw karne ke baad return karta hai."
+},
+
+{
+q:"Causing a strong dislike",
+opt:["Redundant","Repulsive","Hateful","Revealing"],
+ans:"Repulsive",
+
+explainQ:"Matlab aisa jo bahut zyada nafrat ya dislike paida kare.",
+
+optMeaning:{
+Redundant:"Anavashyak",
+Repulsive:"Ghin aane wala",
+Hateful:"Nafrat bhara",
+Revealing:"Prakashit karna"
+},
+
+ansExplain:"Correct answer 'Repulsive' hai kyunki strong dislike ya disgust create karta hai."
+},
+
+{
+q:"A person who shows people their seats",
+opt:["Usher","Guard","Watchman","Cameraman"],
+ans:"Usher",
+
+explainQ:"Matlab cinema, theatre ya function me seats dikhane wala person.",
+
+optMeaning:{
+Usher:"Seat dikhane wala",
+Guard:"Rakshak",
+Watchman:"Chowkidar",
+Cameraman:"Camera chalane wala"
+},
+
+ansExplain:"Correct answer 'Usher' hai kyunki seats assign karta hai."
+},
+
+{
+q:"A fictitious name used by an author",
+opt:["Alibi","Namesake","Homonym","Pseudonym"],
+ans:"Pseudonym",
+
+explainQ:"Matlab writer ka fake ya pen name.",
+
+optMeaning:{
+Alibi:"Bahana",
+Namesake:"Same naam wala",
+Homonym:"Same sound word",
+Pseudonym:"Kalpanik naam / pen name"
+},
+
+ansExplain:"Correct answer 'Pseudonym' hai kyunki author ka fake name hota hai."
+},
+
+{
+q:"Be more successful than someone",
+opt:["Win","Beat","Succeed","Outdo"],
+ans:"Outdo",
+
+explainQ:"Matlab kisi aur se zyada behtar perform karna.",
+
+optMeaning:{
+Win:"Jeetna",
+Beat:"Harna dena",
+Succeed:"Safal hona",
+Outdo:"Kisi se behtar karna"
+},
+
+ansExplain:"Correct answer 'Outdo' hai kyunki kisi se better perform karna hota hai."
+},
+
+{
+q:"One who changes sides",
+opt:["Amateur","Invader","Novice","Turncoat"],
+ans:"Turncoat",
+
+explainQ:"Matlab jo apni loyalty badal kar dusri party ya side join kare.",
+
+optMeaning:{
+Amateur:"Anubhavarahit",
+Invader:"Aakraman karne wala",
+Novice:"Naya vyakti",
+Turncoat:"Pala badalne wala"
+},
+
+ansExplain:"Correct answer 'Turncoat' hai kyunki side change karne wala hota hai."
+},
+
+{
+q:"A person with the same name as another",
+opt:["Alias","Imposter","Namesake","Ancestor"],
+ans:"Namesake",
+
+explainQ:"Matlab do log jinka naam same ho.",
+
+optMeaning:{
+Alias:"Doosra naam",
+Imposter:"Dhoke se identity lena",
+Namesake:"Same naam wala vyakti",
+Ancestor:"Purvaj"
+},
+
+ansExplain:"Correct answer 'Namesake' hai kyunki same name wale log hote hain."
+},
+
+{
+q:"A person who is unduly anxious about his/her health",
+opt:["Valetudinarian","Antiquarian","Disciplinarian","Egalitarian"],
+ans:"Valetudinarian",
+
+explainQ:"Matlab apni health ke liye bahut zyada chinta karne wala vyakti.",
+
+optMeaning:{
+Valetudinarian:"Health anxiety wala",
+Antiquarian:"Purani cheezon ka expert",
+Disciplinarian:"Anushasan palan karane wala",
+Egalitarian:"Samanta vadi"
+},
+
+ansExplain:"Correct answer 'Valetudinarian' hai kyunki health anxiety hoti hai."
+},
+
+{
+q:"Holding an office without receiving a pay",
+opt:["Honorary","Charity","Freelance","Startup"],
+ans:"Honorary",
+
+explainQ:"Matlab bina salary ke kisi post par kaam karna.",
+
+optMeaning:{
+Honorary:"Bina vetan ka pad",
+Charity:"Daan",
+Freelance:"Independent kaam",
+Startup:"Nayi company"
+},
+
+ansExplain:"Correct answer 'Honorary' hai kyunki unpaid position hoti hai."
+},
+
+
+{
+q:"To cross streets on foot carelessly",
+opt:["Catwalk","Jaywalk","Stroll","Wander"],
+ans:"Jaywalk",
+
+explainQ:"Matlab bina rules follow kiye road cross karna (carelessly).",
+
+optMeaning:{
+Catwalk:"Model walk",
+Jaywalk:"Carelessly road cross karna",
+Stroll:"Aaram se chalna",
+Wander:"Bhatakna"
+},
+
+ansExplain:"Correct answer 'Jaywalk' hai kyunki careless way me street cross karne ko jaywalk bolte hain."
+},
+
+{
+q:"Travelling under a name other than one's own",
+opt:["Incredible","Incognito","Impromptu","Invisible"],
+ans:"Incognito",
+
+explainQ:"Matlab apni asli identity chhupa kar travel karna.",
+
+optMeaning:{
+Incredible:"Anokha",
+Incognito:"Gopniya roop se / fake identity me",
+Impromptu:"Bina taiyari ke",
+Invisible:"Dikhta nahi"
+},
+
+ansExplain:"Correct answer 'Incognito' hai kyunki hidden identity me travel karte hain."
+},
+
+{
+q:"To separate husk from the grain",
+opt:["Willow","Winnow","Whip","Whisk"],
+ans:"Winnow",
+
+explainQ:"Matlab anaj se bhusi (husk) alag karna.",
+
+optMeaning:{
+Willow:"Ek ped",
+Winnow:"Anaj saaf karna",
+Whip:"Koda",
+Whisk:"Hilana"
+},
+
+ansExplain:"Correct answer 'Winnow' hai kyunki husk grain se alag kiya jata hai."
+},
+
+{
+q:"Place where two or more rivers meet",
+opt:["Strait","Confluence","Delta","Estuary"],
+ans:"Confluence",
+
+explainQ:"Matlab jahan do ya adhik nadiyan milti hain.",
+
+optMeaning:{
+Strait:"Sankirn jal marg",
+Confluence:"Nadiyon ka milan",
+Delta:"Nadi ka muh",
+Estuary:"Samundar ke paas nadi"
+},
+
+ansExplain:"Correct answer 'Confluence' hai kyunki rivers ka meeting point hota hai."
+},
+
+{
+q:"Two lengths of rope, wood or metal with cross pieces used for climbing up and down walls",
+opt:["Stairs","Railing","Ladder","Steps"],
+ans:"Ladder",
+
+explainQ:"Matlab upar neeche chadhne ke liye banaya gaya structure.",
+
+optMeaning:{
+Stairs:"Seedhiyan",
+Railing:"Rail",
+Ladder:"Seedi",
+Steps:"Kadmon ki seedhi"
+},
+
+ansExplain:"Correct answer 'Ladder' hai kyunki climbing ke liye use hota hai."
+},
+
+{
+q:"Medical doctors who specialise in diagnosing diseases using X-rays, CT scans and ultrasound",
+opt:["Pathologist","Cardiologist","Radiologist","Dermatologist"],
+ans:"Radiologist",
+
+explainQ:"Matlab X-ray, CT scan aur imaging se disease diagnose karne wala doctor.",
+
+optMeaning:{
+Pathologist:"Disease study karne wala",
+Cardiologist:"Heart doctor",
+Radiologist:"Imaging specialist",
+Dermatologist:"Skin doctor"
+},
+
+ansExplain:"Correct answer 'Radiologist' hai kyunki imaging techniques use karta hai."
+},
+
+{
+q:"Something of little value or importance",
+opt:["Trivial","Cardinal","Scanty","Fundamental"],
+ans:"Trivial",
+
+explainQ:"Matlab jo bahut chhota ya important na ho.",
+
+optMeaning:{
+Trivial:"Nirdosh / chhota",
+Cardinal:"Bahut important",
+Scanty:"Kam matra",
+Fundamental:"Moolbhut"
+},
+
+ansExplain:"Correct answer 'Trivial' hai kyunki low importance hota hai."
+},
+
+{
+q:"The organic component of soil, formed by the decomposition of leaves and other plant material",
+opt:["Silt","Humus","Clay","Alluvium"],
+ans:"Humus",
+
+explainQ:"Matlab mitti me patti-paudhon ke galne se bana organic matter.",
+
+optMeaning:{
+Silt:"Bari mitti",
+Humus:"Organic soil matter",
+Clay:"Chikni mitti",
+Alluvium:"Nadi ki mitti"
+},
+
+ansExplain:"Correct answer 'Humus' hai kyunki decomposed organic material hota hai."
+},
+
+{
+q:"A partner in crime",
+opt:["Accomplice","Amateur","Agent","Alibi"],
+ans:"Accomplice",
+
+explainQ:"Matlab crime me saath dene wala vyakti.",
+
+optMeaning:{
+Accomplice:"Saathi apradhi",
+Amateur:"Anubhavarahit",
+Agent:"Pratinidhi",
+Alibi:"Bahana"
+},
+
+ansExplain:"Correct answer 'Accomplice' hai kyunki crime me help karta hai."
+},
+
+{
+q:"A group of lions",
+opt:["Herd","Pride","Pack","Colony"],
+ans:"Pride",
+
+explainQ:"Matlab lions ka group.",
+
+optMeaning:{
+Herd:"Gayo ka jhund",
+Pride:"Sheron ka group",
+Pack:"Kutton ka group",
+Colony:"Keet ya jeevon ka group"
+},
+
+ansExplain:"Correct answer 'Pride' hai kyunki lions ka group pride kehte hain."
+},
+
+{
+q:"A very large impressive residence",
+opt:["Mansion","Igloo","Cabin","Cottage"],
+ans:"Mansion",
+
+explainQ:"Matlab bahut bada aur impressive ghar.",
+
+optMeaning:{
+Mansion:"Bada mahal jaisa ghar",
+Igloo:"Barf ka ghar",
+Cabin:"Chhota ghar",
+Cottage:"Gramin ghar"
+},
+
+ansExplain:"Correct answer 'Mansion' hai kyunki large luxurious house hota hai."
+},
+
+{
+q:"An extreme fear of darkness",
+opt:["Acrophobia","Hydrophobia","Nyctophobia","Hemophobia"],
+ans:"Nyctophobia",
+
+explainQ:"Matlab andhere (darkness) ka dar.",
+
+optMeaning:{
+Acrophobia:"Unchai ka dar",
+Hydrophobia:"Pani ka dar",
+Nyctophobia:"Andhere ka dar",
+Hemophobia:"Khoon ka dar"
+},
+
+ansExplain:"Correct answer 'Nyctophobia' hai kyunki darkness fear hota hai."
+}
+
+
+
+];
+
+let current=0;
+let answers={};
+let time=900;
+let interval;
+let submitted=false;
+
+function playSound(id){
+  document.getElementById(id).play();
+}
+
+function loadQ(){
+  let q=questions[current];
+  document.getElementById("question").innerText="Q"+(current+1)+". "+q.q;
+
+  let optDiv=document.getElementById("options");
+  optDiv.innerHTML="";
+
+  q.opt.forEach(o=>{
+    let d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+
+    if(answers[current]==o) d.classList.add("selected");
+
+    d.onclick=()=>{
+      if(submitted) return;
+
+      playSound("clickSound");
+      answers[current]=o;
+
+      document.querySelectorAll(".option")
+      .forEach(x=>x.classList.remove("selected"));
+
+      d.classList.add("selected");
+      document.getElementById("btn"+current).classList.add("attempted");
+    };
+
+    optDiv.appendChild(d);
+  });
+
+  if(submitted) review();
+}
+
+function showQuestionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Meaning of Question</h3>
+    <p>${q.explainQ}</p>
+  `;
+}
+
+function showOptionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Option Meaning</h3>
+    <ul>
+      ${q.opt.map(o=>`<li><b>${o}</b> → ${q.optMeaning[o]}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function hideInfo(){
+  document.getElementById("infoBox").style.display="none";
+}
+
+function review(){
+  let q=questions[current];
+
+  document.querySelectorAll(".option").forEach(opt=>{
+    opt.classList.remove("selected");
+
+    if(opt.innerText===q.ans){
+      opt.classList.add("correct");
+    }
+
+    if(
+      answers[current] &&
+      answers[current]!==q.ans &&
+      opt.innerText===answers[current]
+    ){
+      opt.classList.add("wrong");
+    }
+  });
+
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#22c55e;">Correct Answer</h3>
+    <p><b>Answer:</b> ${q.ans}</p>
+    <p>${q.ansExplain}</p>
+  `;
+}
+
+function createPanel(){
+  let p=document.getElementById("panel");
+  questions.forEach((_,i)=>{
+    let b=document.createElement("button");
+    b.innerText=i+1;
+    b.className="qbtn";
+    b.id="btn"+i;
+    b.onclick=()=>{ current=i; loadQ(); };
+    p.appendChild(b);
+  });
+}
+
+function nextQ(){
+  if(current<questions.length-1){
+    current++;
+    loadQ();
+  }else{
+    submitQuiz();
+  }
+}
+
+function clearAns(){
+  if(!submitted){
+    delete answers[current];
+    loadQ();
+  }
+}
+
+function submitQuiz(){
+  submitted=true;
+  playSound("submitSound");
+  clearInterval(interval);
+
+  let c=0,w=0;
+
+  questions.forEach((q,i)=>{
+    if(!answers[i]) return;
+    if(answers[i]===q.ans) c++;
+    else w++;
+  });
+
+  let score=c-(w*0.25);
+  let percent=(score/questions.length)*100;
+
+  document.getElementById("result").innerHTML=`
+    <h3>Score: ${score}</h3>
+    <p>Correct: ${c} | Wrong: ${w}</p>
+    <p>Percent: ${percent.toFixed(2)}%</p>
+  `;
+
+  loadQ();
+}
+
+function timerRun(){
+  interval=setInterval(()=>{
+    time--;
+
+    let m=Math.floor(time/60);
+    let s=time%60;
+
+    document.getElementById("timer").innerText=
+      `${m}:${s<10?"0":s}`;
+
+    if(time<=0) submitQuiz();
+  },1000);
+}
+
+createPanel();
+loadQ();
+timerRun();
+
+</script>
+
+</body>
+</html>
+```

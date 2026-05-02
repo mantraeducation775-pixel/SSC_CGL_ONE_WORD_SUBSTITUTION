@@ -1,0 +1,1336 @@
+ ```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+}
+.header{
+  text-align:center;
+  padding:15px;
+  background:#dc2626;
+  font-size:20px;
+  font-weight:bold;
+}
+.main{
+  display:flex;
+  flex-wrap:wrap;
+  width:95%;
+  margin:auto;
+}
+.left{ flex:2; }
+.right{ flex:1; }
+
+.card{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin:10px;
+  box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+.option{
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  background:#1f2937;
+  cursor:pointer;
+  transition:.2s;
+}
+.option:hover{ background:#374151; }
+
+.selected{ background:#2563eb !important; }
+.correct{ background:#16a34a !important; }
+.wrong{ background:#dc2626 !important; }
+
+button{
+  padding:10px 14px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+}
+.primary{ background:#2563eb; }
+.danger{ background:#dc2626; }
+.submit{ background:#16a34a; }
+.info{ background:#7c3aed; }
+.orange{ background:#f59e0b; color:black; }
+.gray{ background:#475569; }
+
+.qbtn{
+  width:40px;
+  height:40px;
+  margin:4px;
+  border:none;
+  border-radius:6px;
+  background:#374151;
+  color:white;
+  cursor:pointer;
+}
+.attempted{ background:#f59e0b !important; }
+
+.timer{
+  color:#facc15;
+  font-size:18px;
+  font-weight:bold;
+}
+
+#infoBox{
+  display:none;
+  margin-top:18px;
+  padding:15px;
+  border-radius:10px;
+  background:#0f172a;
+  border:1px solid #334155;
+  line-height:1.7;
+}
+
+ul{ padding-left:20px; }
+
+@media(max-width:768px){
+  .main{ flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</div>
+
+<div style="text-align:center;padding:10px;">
+⏱ Time Left: <span id="timer" class="timer">15:00</span>
+</div>
+
+<div class="main">
+
+  <div class="left">
+    <div class="card">
+
+      <h3 id="question"></h3>
+      <div id="options"></div>
+
+      <button class="primary" onclick="nextQ()">Save & Next</button>
+      <button class="danger" onclick="clearAns()">Clear</button>
+      <button class="submit" onclick="submitQuiz()">Submit</button>
+      <button class="info" onclick="showQuestionMeaning()">Meaning of Question</button>
+      <button class="orange" onclick="showOptionMeaning()">Option Meaning</button>
+      <button class="gray" onclick="hideInfo()">Hide Meaning</button>
+
+      <div id="infoBox"></div>
+      <div id="result"></div>
+
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>Questions</h3>
+      <div id="panel"></div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="submitSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+
+let questions = [
+
+ 
+
+{
+q:"Take hold of forcibly or suddenly",
+opt:["Seize","Liberate","Release","Relinquish"],
+ans:"Seize",
+
+explainQ:"Matlab kisi cheez ko forcefully ya achanak pakad lena ya control kar lena.",
+
+optMeaning:{
+Seize:"Zabardasti pakad lena / capture karna",
+Liberate:"Azaad karna",
+Release:"Chhod dena",
+Relinquish:"Haq tyagna"
+},
+
+ansExplain:"Correct answer 'Seize' hai kyunki forcibly ya suddenly kisi cheez ko pakadna seize hota hai."
+},
+
+{
+q:"Try hard to do or achieve something",
+opt:["Endanger","Hardworking","Endeavour","Indent"],
+ans:"Endeavour",
+
+explainQ:"Matlab kisi goal ko achieve karne ke liye poori koshish karna.",
+
+optMeaning:{
+Endanger:"Khatre me daalna",
+Hardworking:"Mehnati",
+Endeavour:"Koshish karna / strive karna",
+Indent:"Niche likhna / space dena"
+},
+
+ansExplain:"Correct answer 'Endeavour' hai kyunki try hard karne ko endeavour bolte hain."
+},
+
+{
+q:"The Bishop criticised the Government for its having no sympathy and an uncaring attitude to the homeless and the unemployed",
+opt:["Merciful","Callous","Tender","Compassionate"],
+ans:"Callous",
+
+explainQ:"Matlab insensitive aur bina sympathy wala attitude.",
+
+optMeaning:{
+Merciful:"Dayaalu",
+Callous:"Bina feeling ya sympathy wala",
+Tender:"Naram dil",
+Compassionate:"Dayalu aur caring"
+},
+
+ansExplain:"Correct answer 'Callous' hai kyunki uncaring aur sympathy-less behaviour ko callous bolte hain."
+},
+
+{
+q:"Hatred",
+opt:["Malleable","Malevolence","Magnanimous","Malapropos"],
+ans:"Malevolence",
+
+explainQ:"Matlab kisi ke liye extreme nafrat ya bura bhav rakhna.",
+
+optMeaning:{
+Malleable:"Asani se badalne wala",
+Malevolence:"Nafrat ya bura irada",
+Magnanimous:"Udar / generous",
+Malapropos:"Gair-munāsib"
+},
+
+ansExplain:"Correct answer 'Malevolence' hai kyunki hatred ya ill will ko malevolence bolte hain."
+},
+
+{
+q:"A large single detached house with single or double story",
+opt:["Suite","Apartment","Bungalow","Penthouse"],
+ans:"Bungalow",
+
+explainQ:"Matlab ek alag bada ghar jo usually single ya double story hota hai.",
+
+optMeaning:{
+Suite:"Hotel room set",
+Apartment:"Flat",
+Bungalow:"Independent house",
+Penthouse:"Top floor luxury flat"
+},
+
+ansExplain:"Correct answer 'Bungalow' hai kyunki detached single house ko bungalow bolte hain."
+},
+
+{
+q:"One who speaks for others",
+opt:["Spokesperson","Orator","Verbose","Talkative"],
+ans:"Spokesperson",
+
+explainQ:"Matlab jo kisi group ya organisation ki taraf se bolta hai.",
+
+optMeaning:{
+Spokesperson:"Group ka representative speaker",
+Orator:"Public speaker",
+Verbose:"Bahut bolne wala",
+Talkative:"Bolne ka shaukeen"
+},
+
+ansExplain:"Correct answer 'Spokesperson' hai kyunki others ki taraf se speak karne wale ko spokesperson bolte hain."
+},
+
+{
+q:"A doctor who specializes in heart diseases",
+opt:["Urologist","Cardiologist","Nephrologist","Dermatologist"],
+ans:"Cardiologist",
+
+explainQ:"Matlab heart (dil) ki bimariyon ka specialist doctor.",
+
+optMeaning:{
+Urologist:"Urinary system specialist",
+Cardiologist:"Heart specialist",
+Nephrologist:"Kidney specialist",
+Dermatologist:"Skin specialist"
+},
+
+ansExplain:"Correct answer 'Cardiologist' hai kyunki heart diseases ka doctor cardiologist hota hai."
+},
+
+{
+q:"To the utmost or most absolute extent or degree",
+opt:["Merely","Barely","Primarily","Quite"],
+ans:"Quite",
+
+explainQ:"Matlab kisi cheez ko fully ya completely degree tak express karna (context me 'completely' sense).",
+
+optMeaning:{
+Merely:"Sirf / only",
+Barely:"Mushkil se",
+Primarily:"Sabse zyada / mainly",
+Quite:"Kafi had tak / completely sense me"
+},
+
+ansExplain:"Correct answer 'Quite' hai kyunki extent ya degree ko express karne ke liye quite use hota hai."
+},
+
+{
+q:"Really coming from its stated, advertised or reputed source",
+opt:["Genuine","Insincere","Fake","Bogus"],
+ans:"Genuine",
+
+explainQ:"Matlab asli ya authentic cheez jo original source se ho.",
+
+optMeaning:{
+Genuine:"Asli / authentic",
+Insincere:"Nakli bhavna",
+Fake:"Nakli",
+Bogus:"Jhootha / fake"
+},
+
+ansExplain:"Correct answer 'Genuine' hai kyunki original aur authentic source se aane wali cheez genuine hoti hai."
+},
+
+ 
+
+{
+q:"An expert in writing by hand",
+opt:["Obstetrician","Chirographer","Funambulist","Endodontist"],
+ans:"Chirographer",
+
+explainQ:"Matlab jo handwriting ya writing ke art me expert hota hai.",
+
+optMeaning:{
+Obstetrician:"Pregnancy doctor",
+Chirographer:"Handwriting expert",
+Funambulist:"Rope par chalne wala",
+Endodontist:"Teeth specialist"
+},
+
+ansExplain:"Correct answer 'Chirographer' hai kyunki handwriting writing expert ko chirographer bolte hain."
+},
+
+{
+q:"A highly unpleasant, annoying, objectionable sound",
+opt:["Slight","Natal","Lovely","Nasty"],
+ans:"Nasty",
+
+explainQ:"Matlab bahut irritating ya unpleasant sound.",
+
+optMeaning:{
+Slight:"Halka / ignore karna",
+Natal:"Birth related",
+Lovely:"Pyaara",
+Nasty:"Ganda / annoying"
+},
+
+ansExplain:"Correct answer 'Nasty' hai kyunki unpleasant sound ko nasty bola jata hai."
+},
+
+{
+q:"A group of guns or missile launchers operated together at one place",
+opt:["Psaltery","Skittery","Cemetery","Battery"],
+ans:"Battery",
+
+explainQ:"Matlab ek saath operate hone wale weapons ka group.",
+
+optMeaning:{
+Psaltery:"Musical instrument",
+Skittery:"Idhar-udhar bhagna",
+Cemetery:"Kabrastan",
+Battery:"Gun/missile unit"
+},
+
+ansExplain:"Correct answer 'Battery' hai kyunki grouped weapons ko battery bolte hain."
+},
+
+{
+q:"Deliberately and maliciously set something on fire",
+opt:["Agrarian","Arson","Ambush","Apex"],
+ans:"Arson",
+
+explainQ:"Matlab jaanbujhkar aag lagana.",
+
+optMeaning:{
+Agrarian:"Kheti se related",
+Arson:"Jaanbujhkar aag lagana",
+Ambush:"Achanak attack",
+Apex:"Sabse ucha point"
+},
+
+ansExplain:"Correct answer 'Arson' hai kyunki intentionally fire lagane ko arson bolte hain."
+},
+
+{
+q:"One who is hostile and violent",
+opt:["Idle","Aggressive","Legendary","Agreeable"],
+ans:"Aggressive",
+
+explainQ:"Matlab jo violent ya attack karne wala ho.",
+
+optMeaning:{
+Idle:"Nishkriya",
+Aggressive:"Himshak / violent",
+Legendary:"Mashhoor",
+Agreeable:"Mild / friendly"
+},
+
+ansExplain:"Correct answer 'Aggressive' hai kyunki violent behaviour ko aggressive bolte hain."
+},
+
+{
+q:"Release someone from a duty or obligation",
+opt:["Banish","Expel","Dismiss","Exonerate"],
+ans:"Exonerate",
+
+explainQ:"Matlab kisi ko responsibility ya blame se free karna.",
+
+optMeaning:{
+Banish:"Desh nikala dena",
+Expel:"Nikaal dena",
+Dismiss:"Chhod dena",
+Exonerate:"Mukti dena / free karna"
+},
+
+ansExplain:"Correct answer 'Exonerate' hai kyunki duty ya blame se release karna hota hai."
+},
+
+{
+q:"A cage for small animals",
+opt:["Cave","Hutch","Shed","Hut"],
+ans:"Hutch",
+
+explainQ:"Matlab chhote animals rakhne ka enclosure.",
+
+optMeaning:{
+Cave:"Gufa",
+Hutch:"Chhota animal cage",
+Shed:"Chhota shed",
+Hut:"Jhuggi"
+},
+
+ansExplain:"Correct answer 'Hutch' hai kyunki small animals ke cage ko hutch bolte hain."
+},
+
+{
+q:"An action of making amends for a wrong or injury",
+opt:["Atonement","Redemption","Rite","Perjury"],
+ans:"Atonement",
+
+explainQ:"Matlab galti ka prayashchit karna.",
+
+optMeaning:{
+Atonement:"Prayashchit",
+Redemption:"Mukti / sudhar",
+Rite:"Rasam",
+Perjury:"Jhoothi gawahi"
+},
+
+ansExplain:"Correct answer 'Atonement' hai kyunki wrong ko correct karne ka act hota hai."
+},
+
+{
+q:"To own up to something as true",
+opt:["Confess","Suppress","Redress","Assess"],
+ans:"Confess",
+
+explainQ:"Matlab sach ko accept kar lena.",
+
+optMeaning:{
+Confess:"Sweekar karna",
+Suppress:"Dabana",
+Redress:"Sudharna",
+Assess:"Andaza lagana"
+},
+
+ansExplain:"Correct answer 'Confess' hai kyunki truth accept karna confess hota hai."
+},
+
+{
+q:"Climb or move with difficulty or a lot of effort, typically using one's hands and feet",
+opt:["Pedagogy","Clamber","Quack","Retreat"],
+ans:"Clamber",
+
+explainQ:"Matlab haath-pair se mushkil se chadhna ya move karna.",
+
+optMeaning:{
+Pedagogy:"Teaching method",
+Clamber:"Mushkil se chadhna",
+Quack:"Batakh ki awaaz / fake doctor",
+Retreat:"Piche hatna"
+},
+
+ansExplain:"Correct answer 'Clamber' hai kyunki difficult climbing ko clamber bolte hain."
+},
+
+ 
+{
+q:"The expression of a wish that misfortune or doom befall a person",
+opt:["Curse","Praise","Blessing","Oath"],
+ans:"Curse",
+
+explainQ:"Matlab kisi vyakti ke liye bura hone ki iccha vyakt karna.",
+
+optMeaning:{
+Curse:"Baddua dena",
+Praise:"Tareef",
+Blessing:"Aashirvaad",
+Oath:"Kasam"
+},
+
+ansExplain:"Correct answer 'Curse' hai kyunki kisi ke liye misfortune ki wish karna curse hota hai."
+},
+
+{
+q:"One who does not tire easily",
+opt:["Indefatigable","Pedantic","Recluse","Libertine"],
+ans:"Indefatigable",
+
+explainQ:"Matlab jo jaldi thakta nahi hai.",
+
+optMeaning:{
+Indefatigable:"Jo kabhi na thake",
+Pedantic:"Chhoti baaton par jor dene wala",
+Recluse:"Akele rehne wala",
+Libertine:"Azaad aur irresponsible lifestyle wala"
+},
+
+ansExplain:"Correct answer 'Indefatigable' hai kyunki jo easily tire nahi hota use indifatigable kehte hain."
+},
+
+{
+q:"Any award, honour or laudatory notice",
+opt:["Complement","Deal","Statute","Accolade"],
+ans:"Accolade",
+
+explainQ:"Matlab kisi achievement ke liye diya gaya honour ya praise.",
+
+optMeaning:{
+Complement:"Addition / tareef",
+Deal:"Len-den",
+Statute:"Kanun",
+Accolade:"Samman / award"
+},
+
+ansExplain:"Correct answer 'Accolade' hai kyunki honour ya award ko accolade bolte hain."
+},
+
+{
+q:"A disturbed state of mind caused by an illness",
+opt:["Delirium","Discrepancy","Dilemma","Depreciation"],
+ans:"Delirium",
+
+explainQ:"Matlab illness ki wajah se confusion ya disturbed mental state.",
+
+optMeaning:{
+Delirium:"Mental confusion (bimari se)",
+Discrepancy:"Mismatch",
+Dilemma:"Doubtful situation",
+Depreciation:"Value kam hona"
+},
+
+ansExplain:"Correct answer 'Delirium' hai kyunki illness se mind disturb hone ko delirium bolte hain."
+},
+
+{
+q:"A large bundle bound for storage or transport",
+opt:["Antagonist","Belligerent","Bale","Apiary"],
+ans:"Bale",
+
+explainQ:"Matlab saman ka bada bundle jo bandha hota hai.",
+
+optMeaning:{
+Antagonist:"Dushman",
+Belligerent:"Ladai karne wala",
+Bale:"Bundle of goods",
+Apiary:"Bee farm"
+},
+
+ansExplain:"Correct answer 'Bale' hai kyunki storage ke liye bundle ko bale kehte hain."
+},
+
+{
+q:"An agreement between enemies or opponents to stop fighting for a certain period of time",
+opt:["Unanimous","Graft","Truce","Surplus"],
+ans:"Truce",
+
+explainQ:"Matlab ladne wale parties ke beech temporary peace agreement.",
+
+optMeaning:{
+Unanimous:"Ekmat",
+Graft:"Bribery",
+Truce:"Temporary peace",
+Surplus:"Extra quantity"
+},
+
+ansExplain:"Correct answer 'Truce' hai kyunki fighting stop karne ka temporary agreement hota hai."
+},
+
+{
+q:"Having or forming a hard outer layer",
+opt:["Crunched","Crushed","Crusted","Cursed"],
+ans:"Crusted",
+
+explainQ:"Matlab kisi cheez par hard outer layer banna.",
+
+optMeaning:{
+Crunched:"Crushed / todna",
+Crushed:"Daba dena",
+Crusted:"Hard layer wala",
+Cursed:"Shapit"
+},
+
+ansExplain:"Correct answer 'Crusted' hai kyunki hard outer layer ko crusted bolte hain."
+},
+
+{
+q:"A moral or legal obligation",
+opt:["Object","Duty","Principal","Discipline"],
+ans:"Duty",
+
+explainQ:"Matlab farz ya zimmedari jo legally ya morally hoti hai.",
+
+optMeaning:{
+Object:"Vastu",
+Duty:"Kartavya",
+Principal:"Mool",
+Discipline:"Anushasan"
+},
+
+ansExplain:"Correct answer 'Duty' hai kyunki obligation ko duty bolte hain."
+},
+
+{
+q:"Having a common centre, as circles or spheres",
+opt:["Cylindrical","Concentric","Elliptical","Centrifugal"],
+ans:"Concentric",
+
+explainQ:"Matlab ek hi centre wale circles ya shapes.",
+
+optMeaning:{
+Cylindrical:"Cylinder jaisa",
+Concentric:"Same center wala",
+Elliptical:"Oval shape",
+Centrifugal:"Center se door jaane wala"
+},
+
+ansExplain:"Correct answer 'Concentric' hai kyunki same centre wale circles concentric hote hain."
+},
+
+{
+q:"A room in a public building where outdoor clothes or luggage may be left",
+opt:["Cemetery","Cloakroom","Courtyard","Hangar"],
+ans:"Cloakroom",
+
+explainQ:"Matlab public place me coat ya luggage rakhne ka room.",
+
+optMeaning:{
+Cemetery:"Kabrastan",
+Cloakroom:"Bag/coat room",
+Courtyard:"Aangan",
+Hangar:"Plane storage"
+},
+
+ansExplain:"Correct answer 'Cloakroom' hai kyunki clothes/luggage rakhne ki jagah cloakroom hoti hai."
+},
+
+ 
+{
+q:"Occurring after the death of the said person",
+opt:["Effusive","Gregarious","Fugitive","Posthumous"],
+ans:"Posthumous",
+
+explainQ:"Matlab kisi vyakti ki death ke baad hone wala.",
+
+optMeaning:{
+Effusive:"Emotionally expressive",
+Gregarious:"Milansaar",
+Fugitive:"Bhagoda / runaway",
+Posthumous:"Death ke baad"
+},
+
+ansExplain:"Correct answer 'Posthumous' hai kyunki death ke baad hone wali cheez posthumous hoti hai."
+},
+
+{
+q:"A place where dead bodies are kept for identification",
+opt:["Hutch","Morgue","Crematorium","Tannery"],
+ans:"Morgue",
+
+explainQ:"Matlab jahan dead bodies ko identification ke liye rakha jata hai.",
+
+optMeaning:{
+Hutch:"Chhota animal cage",
+Morgue:"Dead body storage place",
+Crematorium:"Shamshan ghat",
+Tannery:"Leather processing place"
+},
+
+ansExplain:"Correct answer 'Morgue' hai kyunki dead bodies identification ke liye morgue me rakhi jati hain."
+},
+
+{
+q:"Make something bad or unsatisfactory better",
+opt:["Judge","Malign","Castigate","Ameliorate"],
+ans:"Ameliorate",
+
+explainQ:"Matlab kisi situation ko improve karna.",
+
+optMeaning:{
+Judge:"Nirnay lena",
+Malign:"Badnaam karna",
+Castigate:"Sakht criticize karna",
+Ameliorate:"Sudharna / improve karna"
+},
+
+ansExplain:"Correct answer 'Ameliorate' hai kyunki improvement ko ameliorate kehte hain."
+},
+
+{
+q:"An afternoon performance in a theatre or cinema",
+opt:["Canvas","Premiere","Comedy","Matinee"],
+ans:"Matinee",
+
+explainQ:"Matlab dopahar ka theatre ya cinema show.",
+
+optMeaning:{
+Canvas:"Kapda / painting sheet",
+Premiere:"Pehla show",
+Comedy:"Hasi natak",
+Matinee:"Afternoon show"
+},
+
+ansExplain:"Correct answer 'Matinee' hai kyunki afternoon performance ko matinee bolte hain."
+},
+
+{
+q:"An abbreviation formed from the initial letters of others and pronounced as a word",
+opt:["Caption","Slogan","Flotilla","Acronym"],
+ans:"Acronym",
+
+explainQ:"Matlab initials se bana hua word jo pronounce hota hai.",
+
+optMeaning:{
+Caption:"Heading",
+Slogan:"Tagline",
+Flotilla:"Ships ka group",
+Acronym:"Initial letters se bana word"
+},
+
+ansExplain:"Correct answer 'Acronym' hai kyunki initials se bana pronounceable word acronym hota hai."
+},
+
+{
+q:"A group of fish",
+opt:["Troop","Bunch","Litter","School"],
+ans:"School",
+
+explainQ:"Matlab machhliyon ka group.",
+
+optMeaning:{
+Troop:"Soldiers ka group",
+Bunch:"Guchha",
+Litter:"Janwar ke bachche",
+School:"Fish ka group"
+},
+
+ansExplain:"Correct answer 'School' hai kyunki fish group ko school bolte hain."
+},
+
+{
+q:"A state of perfect balance",
+opt:["Equilibrium","Extempore","Medieval","Irrelevant"],
+ans:"Equilibrium",
+
+explainQ:"Matlab poori tarah balance ki state.",
+
+optMeaning:{
+Equilibrium:"Saman avastha / balance",
+Extempore:"Bina tayyari speech",
+Medieval:"Purana yug",
+Irrelevant:"Anupayukt"
+},
+
+ansExplain:"Correct answer 'Equilibrium' hai kyunki perfect balance ko equilibrium kehte hain."
+},
+
+{
+q:"Unable to speak distinctly or express oneself clearly",
+opt:["Inane","Inapt","Inarch","Inarticulate"],
+ans:"Inarticulate",
+
+explainQ:"Matlab clearly bol ya express na kar pana.",
+
+optMeaning:{
+Inane:"Bekaar",
+Inapt:"Anupayukt",
+Inarch:"Curve banana",
+Inarticulate:"Safai se na bol pana"
+},
+
+ansExplain:"Correct answer 'Inarticulate' hai kyunki clear speech na kar pana inarticulate hota hai."
+},
+
+{
+q:"He is an excessively enthusiastic and strict follower of Judaism",
+opt:["A janissary","A Zionist","A zealot","A healer"],
+ans:"A zealot",
+
+explainQ:"Matlab kisi belief ka extreme follower.",
+
+optMeaning:{
+Janissary:"Ottoman soldier",
+Zionist:"Political supporter of Israel movement",
+Zealot:"Extreme follower",
+Healer:"Rogi theek karne wala"
+},
+
+ansExplain:"Correct answer 'Zealot' hai kyunki extreme religious follower ko zealot kehte hain."
+},
+
+{
+q:"A short stay at a place that is not your own home",
+opt:["Putrefy","Sojourn","Perplex","Epitome"],
+ans:"Sojourn",
+
+explainQ:"Matlab temporary stay kahin aur rehna.",
+
+optMeaning:{
+Putrefy:"Sad jana / decay",
+Sojourn:"Short stay",
+Perplex:"Confuse karna",
+Epitome:"Best example"
+},
+
+ansExplain:"Correct answer 'Sojourn' hai kyunki temporary stay ko sojourn bolte hain."
+},
+
+
+{
+q:"Mohan frequently wastes his money on luxurious objects such as cars and digital devices",
+opt:["Extravagant","Businessman","Consumer","Capitalist"],
+ans:"Extravagant",
+
+explainQ:"Matlab jo insan zaroorat se zyada luxury cheezon par paisa kharch karta hai.",
+
+optMeaning:{
+Extravagant:"Fizool kharchi karne wala",
+Businessman:"Vyapari",
+Consumer:"Upbhokta",
+Capitalist:"Poonjivadi"
+},
+
+ansExplain:"Correct answer 'Extravagant' hai kyunki luxury par zyada kharch karne wale ko extravagant kehte hain."
+},
+
+{
+q:"The state of being full or complete",
+opt:["Plunder","Plebiscite","Plenitude","Pliability"],
+ans:"Plenitude",
+
+explainQ:"Matlab poornata ya full quantity ki state.",
+
+optMeaning:{
+Plunder:"Lootna",
+Plebiscite:"Janmat sangrah",
+Plenitude:"Purnata / abundance",
+Pliability:"Lachilapan"
+},
+
+ansExplain:"Correct answer 'Plenitude' hai kyunki fullness ya completeness ko plenitude kehte hain."
+},
+
+{
+q:"Reject as invalid, especially by legal procedure",
+opt:["Reiterate","Putrid","Putrefy","Quash"],
+ans:"Quash",
+
+explainQ:"Matlab kanooni roop se kisi cheez ko cancel ya invalid declare karna.",
+
+optMeaning:{
+Reiterate:"Dobara kehna",
+Putrid:"Sada hua",
+Putrefy:"Sada jana",
+Quash:"Radd karna / cancel karna"
+},
+
+ansExplain:"Correct answer 'Quash' hai kyunki legal invalidation ko quash kehte hain."
+},
+
+{
+q:"A sudden unsteady movement; a stagger",
+opt:["Lupin","Lurch","Lugger","Lumen"],
+ans:"Lurch",
+
+explainQ:"Matlab achanak ladkhadana ya unstable movement.",
+
+optMeaning:{
+Lupin:"Ek plant",
+Lurch:"Ladkhadana",
+Lugger:"Boat type",
+Lumen:"Light unit"
+},
+
+ansExplain:"Correct answer 'Lurch' hai kyunki sudden stagger ko lurch kehte hain."
+},
+
+{
+q:"Allowing or assisting to discover",
+opt:["Conceptual","Ineducative","Unempirical","Heuristic"],
+ans:"Heuristic",
+
+explainQ:"Matlab seekhne ya discover karne me help karna.",
+
+optMeaning:{
+Conceptual:"Concept se related",
+Ineducative:"Siksha na dene wala",
+Unempirical:"Prayogik na ho",
+Heuristic:"Discovery based learning"
+},
+
+ansExplain:"Correct answer 'Heuristic' hai kyunki discovery-based learning ko heuristic kehte hain."
+},
+
+{
+q:"Something that is pertaining to controversy",
+opt:["Poignancy","Laudatory","Putative","Polemical"],
+ans:"Polemical",
+
+explainQ:"Matlab vivad ya debate se related.",
+
+optMeaning:{
+Poignancy:"Teekha dard",
+Laudatory:"Praise wala",
+Putative:"Mana hua",
+Polemical:"Vivad se related"
+},
+
+ansExplain:"Correct answer 'Polemical' hai kyunki controversy ko polemical bolte hain."
+},
+
+{
+q:"A person as a source of intellectual light or moral inspiration",
+opt:["Lurch","Luminary","Luminaire","Lunette"],
+ans:"Luminary",
+
+explainQ:"Matlab jo kisi ko intellectual ya moral inspiration deta hai.",
+
+optMeaning:{
+Lurch:"Ladkhadana",
+Luminary:"Prakash dene wala vyakti",
+Luminaire:"Light fixture",
+Lunette:"Half-moon shape"
+},
+
+ansExplain:"Correct answer 'Luminary' hai kyunki inspirational person ko luminary kehte hain."
+},
+
+{
+q:"To dispute angrily",
+opt:["Wrench","Wrangle","Wreck","Wrack"],
+ans:"Wrangle",
+
+explainQ:"Matlab jhagda karna ya gusse me debate karna.",
+
+optMeaning:{
+Wrench:"Zor se kheenchna",
+Wrangle:"Jhagda karna",
+Wreck:"Todna",
+Wrack:"Nuksan"
+},
+
+ansExplain:"Correct answer 'Wrangle' hai kyunki angry dispute ko wrangle kehte hain."
+},
+
+{
+q:"Work extremely hard",
+opt:["Toil","Troop","Slam","Spew"],
+ans:"Toil",
+
+explainQ:"Matlab bahut mehnat karna.",
+
+optMeaning:{
+Toil:"Kadi mehnat karna",
+Troop:"Sena",
+Slam:"Zor se band karna",
+Spew:"Ulti ya nikalna"
+},
+
+ansExplain:"Correct answer 'Toil' hai kyunki hard work ko toil kehte hain."
+},
+
+{
+q:"The action of examining with care or reading carefully",
+opt:["Persuade","Perverse","Perusal","Persiflage"],
+ans:"Perusal",
+
+explainQ:"Matlab dhyan se padhna ya examine karna.",
+
+optMeaning:{
+Persuade:"Manana",
+Perverse:"Ulta / stubborn",
+Perusal:"Carefully reading",
+Persiflage:"Mazak"
+},
+
+ansExplain:"Correct answer 'Perusal' hai kyunki careful reading ko perusal kehte hain."
+},
+
+{
+q:"A person who leaves his or her own country to live in another country permanently",
+opt:["Vagabond","Mercenary","Emigrant","Immigrant"],
+ans:"Emigrant",
+
+explainQ:"Matlab apne desh ko chhod kar doosre desh permanently jaana.",
+
+optMeaning:{
+Vagabond:"Bhatakne wala",
+Mercenary:"Paise ke liye ladne wala",
+Emigrant:"Apne desh se bahar jaane wala",
+Immigrant:"Doosre desh me aane wala"
+},
+
+ansExplain:"Correct answer 'Emigrant' hai kyunki jo apna country chhodta hai use emigrant kehte hain."
+},
+
+
+{
+q:"Lasting for a very short period of time",
+opt:["Permanent","Ceaseless","Pungent","Ephemeral"],
+ans:"Ephemeral",
+
+explainQ:"Matlab jo cheez bahut hi kam samay tak tikti hai ya hoti hai.",
+
+optMeaning:{
+Permanent:"Sthayi",
+Ceaseless:"Lagataar",
+Pungent:"Teekha / strong smell ya taste wala",
+Ephemeral:"Bahut short time ke liye"
+},
+
+ansExplain:"Correct answer 'Ephemeral' hai kyunki very short duration wali cheez ko ephemeral bolte hain."
+},
+
+{
+q:"Strong taste or liking for something",
+opt:["Insolvent","Parole","Ebullient","Penchant"],
+ans:"Penchant",
+
+explainQ:"Matlab kisi cheez ke liye strong attraction ya liking hona.",
+
+optMeaning:{
+Insolvent:"Deen / bankrupt",
+Parole:"Temporary release",
+Ebullient:"Utsah se bhara hua",
+Penchant:"Strong liking / rujhan"
+},
+
+ansExplain:"Correct answer 'Penchant' hai kyunki strong liking ya preference ko penchant bolte hain."
+},
+
+{
+q:"To renovate or improve",
+opt:["Relocate","Revamp","Resume","Revalue"],
+ans:"Revamp",
+
+explainQ:"Matlab kisi cheez ko behtar banana ya naye tarike se sudharna.",
+
+optMeaning:{
+Relocate:"Jagah badalna",
+Revamp:"Improve / renovate karna",
+Resume:"Dobara shuru karna",
+Revalue:"Nayi keemat lagana"
+},
+
+ansExplain:"Correct answer 'Revamp' hai kyunki improve ya renovate karne ko revamp kehte hain."
+},
+
+{
+q:"Take and use the thoughts, inventions, etc. of another person as one's own",
+opt:["Copyright","Compose","Produce","Plagiarise"],
+ans:"Plagiarise",
+
+explainQ:"Matlab kisi aur ka kaam ya idea chura kar apna batana.",
+
+optMeaning:{
+Copyright:"Legal hak",
+Compose:"Banana / likhna",
+Produce:"Paida karna / banana",
+Plagiarise:"Chori karke apna batana"
+},
+
+ansExplain:"Correct answer 'Plagiarise' hai kyunki kisi aur ka work copy karke apna batana plagiarism hota hai."
+},
+
+{
+q:"Easily provoked",
+opt:["Invincible","Irascible","Iridescent","Irrational"],
+ans:"Irascible",
+
+explainQ:"Matlab jo jaldi gussa ho jata hai ya easily provoke ho jaye.",
+
+optMeaning:{
+Invincible:"Jo haraya na ja sake",
+Irascible:"Jaldi gussa aane wala",
+Iridescent:"Rang badalne wala chamakdar",
+Irrational:"Be-tark"
+},
+
+ansExplain:"Correct answer 'Irascible' hai kyunki easily angry hone wale ko irascible bolte hain."
+},
+
+{
+q:"Looking or sounding foreign, bizarre, strange, unfamiliar",
+opt:["Outlaw","Outlay","Outlast","Outlandish"],
+ans:"Outlandish",
+
+explainQ:"Matlab ajeeb, strange ya foreign type ka lagna.",
+
+optMeaning:{
+Outlaw:"Gair kanooni",
+Outlay:"Kharcha",
+Outlast:"Zyada der tikna",
+Outlandish:"Ajeeb / strange"
+},
+
+ansExplain:"Correct answer 'Outlandish' hai kyunki strange ya unusual cheez ko outlandish bolte hain."
+},
+
+{
+q:"A pause between the acts of a play",
+opt:["Interlude","Interline","Interlace","Interlink"],
+ans:"Interlude",
+
+explainQ:"Matlab drama ya play ke beech ka break ya pause.",
+
+optMeaning:{
+Interlude:"Beech ka break",
+Interline:"Lines ke beech likhna",
+Interlace:"Guthna / jodna",
+Interlink:"Jodna"
+},
+
+ansExplain:"Correct answer 'Interlude' hai kyunki play ke acts ke beech ka pause interlude hota hai."
+},
+
+{
+q:"Fall back or sink again into a worse state after an improvement",
+opt:["Rekindle","Reiterate","Relayed","Relapse"],
+ans:"Relapse",
+
+explainQ:"Matlab thik hone ke baad fir se pehle jaisi buri condition me chale jana.",
+
+optMeaning:{
+Rekindle:"Dobara jagana",
+Reiterate:"Dobara kehna",
+Relayed:"Aage bhejna",
+Relapse:"Dobara giravat / worsen condition"
+},
+
+ansExplain:"Correct answer 'Relapse' hai kyunki improvement ke baad wapas worse state me jana relapse hota hai."
+},
+
+{
+q:"To walk aimlessly",
+opt:["Amble","Crawl","Sprint","Slither"],
+ans:"Amble",
+
+explainQ:"Matlab bina kisi fixed direction ke dheere dheere ghoomna ya chalna.",
+
+optMeaning:{
+Amble:"Aaram se aimless chalna",
+Crawl:"Rengna",
+Sprint:"Tez daudna",
+Slither:"Sarakte hue chalna"
+},
+
+ansExplain:"Correct answer 'Amble' hai kyunki aimlessly walk karne ko amble bolte hain."
+}
+
+];
+
+let current=0;
+let answers={};
+let time=900;
+let interval;
+let submitted=false;
+
+function playSound(id){
+  document.getElementById(id).play();
+}
+
+function loadQ(){
+  let q=questions[current];
+  document.getElementById("question").innerText="Q"+(current+1)+". "+q.q;
+
+  let optDiv=document.getElementById("options");
+  optDiv.innerHTML="";
+
+  q.opt.forEach(o=>{
+    let d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+
+    if(answers[current]==o) d.classList.add("selected");
+
+    d.onclick=()=>{
+      if(submitted) return;
+
+      playSound("clickSound");
+      answers[current]=o;
+
+      document.querySelectorAll(".option")
+      .forEach(x=>x.classList.remove("selected"));
+
+      d.classList.add("selected");
+      document.getElementById("btn"+current).classList.add("attempted");
+    };
+
+    optDiv.appendChild(d);
+  });
+
+  if(submitted) review();
+}
+
+function showQuestionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Meaning of Question</h3>
+    <p>${q.explainQ}</p>
+  `;
+}
+
+function showOptionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Option Meaning</h3>
+    <ul>
+      ${q.opt.map(o=>`<li><b>${o}</b> → ${q.optMeaning[o]}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function hideInfo(){
+  document.getElementById("infoBox").style.display="none";
+}
+
+function review(){
+  let q=questions[current];
+
+  document.querySelectorAll(".option").forEach(opt=>{
+    opt.classList.remove("selected");
+
+    if(opt.innerText===q.ans){
+      opt.classList.add("correct");
+    }
+
+    if(
+      answers[current] &&
+      answers[current]!==q.ans &&
+      opt.innerText===answers[current]
+    ){
+      opt.classList.add("wrong");
+    }
+  });
+
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#22c55e;">Correct Answer</h3>
+    <p><b>Answer:</b> ${q.ans}</p>
+    <p>${q.ansExplain}</p>
+  `;
+}
+
+function createPanel(){
+  let p=document.getElementById("panel");
+  questions.forEach((_,i)=>{
+    let b=document.createElement("button");
+    b.innerText=i+1;
+    b.className="qbtn";
+    b.id="btn"+i;
+    b.onclick=()=>{ current=i; loadQ(); };
+    p.appendChild(b);
+  });
+}
+
+function nextQ(){
+  if(current<questions.length-1){
+    current++;
+    loadQ();
+  }else{
+    submitQuiz();
+  }
+}
+
+function clearAns(){
+  if(!submitted){
+    delete answers[current];
+    loadQ();
+  }
+}
+
+function submitQuiz(){
+  submitted=true;
+  playSound("submitSound");
+  clearInterval(interval);
+
+  let c=0,w=0;
+
+  questions.forEach((q,i)=>{
+    if(!answers[i]) return;
+    if(answers[i]===q.ans) c++;
+    else w++;
+  });
+
+  let score=c-(w*0.25);
+  let percent=(score/questions.length)*100;
+
+  document.getElementById("result").innerHTML=`
+    <h3>Score: ${score}</h3>
+    <p>Correct: ${c} | Wrong: ${w}</p>
+    <p>Percent: ${percent.toFixed(2)}%</p>
+  `;
+
+  loadQ();
+}
+
+function timerRun(){
+  interval=setInterval(()=>{
+    time--;
+
+    let m=Math.floor(time/60);
+    let s=time%60;
+
+    document.getElementById("timer").innerText=
+      `${m}:${s<10?"0":s}`;
+
+    if(time<=0) submitQuiz();
+  },1000);
+}
+
+createPanel();
+loadQ();
+timerRun();
+
+</script>
+
+</body>
+</html>
+```
+

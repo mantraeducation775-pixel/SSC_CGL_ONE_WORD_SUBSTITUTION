@@ -1,0 +1,647 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+}
+.header{
+  text-align:center;
+  padding:15px;
+  background:#dc2626;
+  font-size:20px;
+  font-weight:bold;
+}
+.main{
+  display:flex;
+  flex-wrap:wrap;
+  width:95%;
+  margin:auto;
+}
+.left{ flex:2; }
+.right{ flex:1; }
+
+.card{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin:10px;
+  box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+.option{
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  background:#1f2937;
+  cursor:pointer;
+  transition:.2s;
+}
+.option:hover{ background:#374151; }
+
+.selected{ background:#2563eb !important; }
+.correct{ background:#16a34a !important; }
+.wrong{ background:#dc2626 !important; }
+
+button{
+  padding:10px 14px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+}
+.primary{ background:#2563eb; }
+.danger{ background:#dc2626; }
+.submit{ background:#16a34a; }
+.info{ background:#7c3aed; }
+.orange{ background:#f59e0b; color:black; }
+.gray{ background:#475569; }
+
+.qbtn{
+  width:40px;
+  height:40px;
+  margin:4px;
+  border:none;
+  border-radius:6px;
+  background:#374151;
+  color:white;
+  cursor:pointer;
+}
+.attempted{ background:#f59e0b !important; }
+
+.timer{
+  color:#facc15;
+  font-size:18px;
+  font-weight:bold;
+}
+
+#infoBox{
+  display:none;
+  margin-top:18px;
+  padding:15px;
+  border-radius:10px;
+  background:#0f172a;
+  border:1px solid #334155;
+  line-height:1.7;
+}
+
+ul{ padding-left:20px; }
+
+@media(max-width:768px){
+  .main{ flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</div>
+
+<div style="text-align:center;padding:10px;">
+⏱ Time Left: <span id="timer" class="timer">15:00</span>
+</div>
+
+<div class="main">
+
+  <div class="left">
+    <div class="card">
+
+      <h3 id="question"></h3>
+      <div id="options"></div>
+
+      <button class="primary" onclick="nextQ()">Save & Next</button>
+      <button class="danger" onclick="clearAns()">Clear</button>
+      <button class="submit" onclick="submitQuiz()">Submit</button>
+      <button class="info" onclick="showQuestionMeaning()">Meaning of Question</button>
+      <button class="orange" onclick="showOptionMeaning()">Option Meaning</button>
+      <button class="gray" onclick="hideInfo()">Hide Meaning</button>
+
+      <div id="infoBox"></div>
+      <div id="result"></div>
+
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>Questions</h3>
+      <div id="panel"></div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="submitSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+
+let questions = [
+
+ {
+q:"The workers received a sum for the services they rendered",
+opt:["Recruitment","Remembrance","Remuneration","Rejuvenation"],
+ans:"Remuneration",
+
+explainQ:"Matlab workers ko unke kaam ya service ke badle payment mila.",
+
+optMeaning:{
+Recruitment:"Naukri ke liye hiring process",
+Remembrance:"Yaad / memory",
+Remuneration:"Kaam ke badle payment / salary",
+Rejuvenation:"Phir se fresh ya young banana"
+},
+
+ansExplain:"Correct answer Remuneration hai kyunki services ke badle jo payment milti hai use remuneration bolte hain."
+},
+
+{
+q:"Foul smell will come if the food is not fresh",
+opt:["brittle","crisp","stale","odourless"],
+ans:"stale",
+
+explainQ:"Matlab agar khana fresh na ho to usme se buri smell aane lagti hai.",
+
+optMeaning:{
+brittle:"Jaldi tootne wala",
+crisp:"Fresh aur crunchy",
+stale:"Basi / purana",
+odourless:"Jisme smell na ho"
+},
+
+ansExplain:"Correct answer stale hai kyunki fresh na hone par food basi ho jata hai aur smell aati hai."
+},
+
+{
+q:"Capable of being done",
+opt:["Suitable","Feasible","Practical","Useful"],
+ans:"Feasible",
+
+explainQ:"Matlab aisa kaam jo realistically kiya ja sake.",
+
+optMeaning:{
+Suitable:"Upyukt / suitable",
+Feasible:"Jo possible ho karna",
+Practical:"Vyavaharik",
+Useful:"Kaam ka / useful"
+},
+
+ansExplain:"Correct answer Feasible hai kyunki capable of being done ka meaning feasible hota hai."
+},
+
+{
+q:"One who eats the flesh of his own species",
+opt:["Non-vegetarian","Vegan","Cannibal","Mammal"],
+ans:"Cannibal",
+
+explainQ:"Matlab aisa vyakti ya jeev jo apni hi species ka flesh khata hai.",
+
+optMeaning:{
+"Non-vegetarian":"Jo meat khata ho",
+Vegan:"Jo animal products na khaye",
+Cannibal:"Apni species ka flesh khane wala",
+Mammal:"Stanpayi jeev"
+},
+
+ansExplain:"Correct answer Cannibal hai kyunki apni hi species ka flesh khane wale ko cannibal bolte hain."
+},
+
+{
+q:"My father always tells amusing and true stories from his childhood at bedtime",
+opt:["anecdotes","sonnets","fables","allegories"],
+ans:"anecdotes",
+
+explainQ:"Matlab papa bedtime par apne bachpan ki interesting aur true short stories batate hain.",
+
+optMeaning:{
+anecdotes:"Chhoti interesting true stories",
+sonnets:"Poem ka ek form",
+fables:"Moral wali fictional stories",
+allegories:"Symbolic meaning wali kahani"
+},
+
+ansExplain:"Correct answer anecdotes hai kyunki amusing aur true short stories ko anecdotes bolte hain."
+},
+
+{
+q:"Humour that describes the weaknesses of the other person",
+opt:["A joke","Attire","Satire","A curse"],
+ans:"Satire",
+
+explainQ:"Matlab aisa humour jo kisi ki weakness ya flaws par funny criticism kare.",
+
+optMeaning:{
+"A joke":"Mazak",
+Attire:"Kapde / dress",
+Satire:"Humorous criticism",
+"A curse":"Shraap"
+},
+
+ansExplain:"Correct answer Satire hai kyunki satire humour ke through weakness ya flaws ko point out karta hai."
+},
+
+{
+q:"Most of the rivers dry up during summer season, but the Ganga is full of water round the year because it is",
+opt:["biennial","biannual","perennial","annual"],
+ans:"perennial",
+
+explainQ:"Matlab Ganga poore saal paani se bhari rehti hai, summer me bhi nahi sukhti.",
+
+optMeaning:{
+biennial:"2 saal me ek baar",
+biannual:"Saal me 2 baar",
+perennial:"Poore saal chalne wala",
+annual:"Har saal ek baar"
+},
+
+ansExplain:"Correct answer perennial hai kyunki perennial river saal bhar flow karti rehti hai."
+},
+
+{
+q:"Much more than usual or expected",
+opt:["Mordancy","Ordinate","Subordinate","Exceeding"],
+ans:"Exceeding",
+
+explainQ:"Matlab normal ya expected amount se bahut zyada.",
+
+optMeaning:{
+Mordancy:"Sharpness / biting quality",
+Ordinate:"Coordinate system ka part",
+Subordinate:"Neeche rank wala",
+Exceeding:"Expected se zyada"
+},
+
+ansExplain:"Correct answer Exceeding hai kyunki much more than usual ka meaning exceeding hota hai."
+},
+
+{
+q:"A short stay that you make while on a longer journey",
+opt:["Saga","Stopover","Refugee","Tent"],
+ans:"Stopover",
+
+explainQ:"Matlab lambi journey ke beech me thodi der ke liye rukna.",
+
+optMeaning:{
+Saga:"Lambi kahani",
+Stopover:"Journey ke beech ka short halt",
+Refugee:"Sharanarthi",
+Tent:"Tamboo"
+},
+
+ansExplain:"Correct answer Stopover hai kyunki long journey ke beech temporary stay ko stopover bolte hain."
+},
+
+{
+q:"Having unlimited power",
+opt:["Omnipotent","Omnipresence","Omniscient","Omnivorous"],
+ans:"Omnipotent",
+
+explainQ:"Matlab jiske paas unlimited ya sarvashaktimaan power ho.",
+
+optMeaning:{
+Omnipotent:"Sarvashaktimaan / unlimited power wala",
+Omnipresence:"Har jagah present hona",
+Omniscient:"Sab kuch jaanne wala",
+Omnivorous:"Plants aur meat dono khane wala"
+},
+
+ansExplain:"Correct answer Omnipotent hai kyunki unlimited power wale ko omnipotent bolte hain."
+},
+
+{
+q:"A person who performs magic to entertain people",
+opt:["Alchemist","Angel","Magician","Palmist"],
+ans:"Magician",
+
+explainQ:"Matlab wo vyakti jo magic tricks dikha kar logon ko entertain karta hai.",
+
+optMeaning:{
+Alchemist:"Purane zamane ka chemical experimenter",
+Angel:"Farishta",
+Magician:"Jaadugar",
+Palmist:"Haath ki rekha dekhne wala"
+},
+
+ansExplain:"Correct answer Magician hai kyunki magic perform karne wale ko magician bolte hain."
+},
+
+{
+q:"A person who is kept captive for fulfilment of demands of money or conditions",
+opt:["Hostage","Hermit","Heretic","Introvert"],
+ans:"Hostage",
+
+explainQ:"Matlab kisi demand ya paise ki condition puri karwane ke liye kisi ko bandi bana kar rakhna.",
+
+optMeaning:{
+Hostage:"Bandi banaya gaya vyakti",
+Hermit:"Akela rehne wala sadhu",
+Heretic:"Traditional belief ke against belief rakhne wala",
+Introvert:"Andar hi andar rehne wala person"
+},
+
+ansExplain:"Correct answer Hostage hai kyunki demand fulfill karwane ke liye captive rakhe gaye person ko hostage bolte hain."
+},
+
+{
+q:"The statistical study of human populations",
+opt:["Photography","Paleography","Astronomy","Demography"],
+ans:"Demography",
+
+explainQ:"Matlab human population ka statistical study — jaise birth rate, death rate, population growth.",
+
+optMeaning:{
+Photography:"Photo lene ki kala",
+Paleography:"Ancient writing ka study",
+Astronomy:"Space aur stars ka study",
+Demography:"Population study"
+},
+
+ansExplain:"Correct answer Demography hai kyunki human population ka study demography kehlata hai."
+},
+
+{
+q:"Showing undue favour to one's own relative during hiring process",
+opt:["nepotism","racism","liberalism","communism"],
+ans:"nepotism",
+
+explainQ:"Matlab hiring me apne relatives ko unfair favour dena.",
+
+optMeaning:{
+nepotism:"Apne rishtedaar ko favour dena",
+racism:"Jaati/race ke basis par bias",
+liberalism:"Open-minded political ideology",
+communism:"Collective ownership system"
+},
+
+ansExplain:"Correct answer nepotism hai kyunki relatives ko unfair advantage dena nepotism hota hai."
+},
+
+{
+q:"One who tends to look at the dark side of things",
+opt:["Dynamist","Polemist","Optimist","Pessimist"],
+ans:"Pessimist",
+
+explainQ:"Matlab aisa vyakti jo har cheez ka negative side dekhta hai.",
+
+optMeaning:{
+Dynamist:"Active / energetic person",
+Polemist:"Debate karne wala",
+Optimist:"Positive soch wala",
+Pessimist:"Negative soch wala"
+},
+
+ansExplain:"Correct answer Pessimist hai kyunki jo dark/negative side dekhe use pessimist bolte hain."
+},
+
+{
+q:"An utter state of confusion",
+opt:["Pathos","Engross","Innuendos","Chaos"],
+ans:"Chaos",
+
+explainQ:"Matlab poori tarah confusion ya disorder ki situation.",
+
+optMeaning:{
+Pathos:"Dukh ya emotional appeal",
+Engross:"Completely involve ho jana",
+Innuendos:"Indirect hint",
+Chaos:"Complete confusion / disorder"
+},
+
+ansExplain:"Correct answer Chaos hai kyunki utter confusion ko chaos bolte hain."
+},
+
+{
+q:"Lack of interest, enthusiasm or concern",
+opt:["Sympathy","Apathy","Empathy","Antipathy"],
+ans:"Apathy",
+
+explainQ:"Matlab kisi cheez me bilkul interest ya concern na hona.",
+
+optMeaning:{
+Sympathy:"Daya / sympathy",
+Apathy:"No interest / no concern",
+Empathy:"Dusre ki feeling samajhna",
+Antipathy:"Strong dislike"
+},
+
+ansExplain:"Correct answer Apathy hai kyunki lack of interest ko apathy bolte hain."
+},
+
+{
+q:"The study of ancient things such as art, graves, ruins etc",
+opt:["Astrology","Archaeology","Geology","Meteorology"],
+ans:"Archaeology",
+
+explainQ:"Matlab purani civilization ki cheezon, ruins aur graves ka study.",
+
+optMeaning:{
+Astrology:"Rashi / stars belief study",
+Archaeology:"Ancient remains ka study",
+Geology:"Earth rocks ka study",
+Meteorology:"Weather study"
+},
+
+ansExplain:"Correct answer Archaeology hai kyunki ancient ruins aur artifacts ka study archaeology hai."
+},
+
+{
+q:"A continuing unpleasant situation where one problem causes another",
+opt:["Vicious cycle","Round cycle","Repetitive cycle","Enclosed cycle"],
+ans:"Vicious cycle",
+
+explainQ:"Matlab ek problem dusri problem create kare aur chain continue hoti rahe — buri cycle.",
+
+optMeaning:{
+"Vicious cycle":"Buri chain reaction of problems",
+"Round cycle":"Circular cycle",
+"Repetitive cycle":"Repeat hone wali cycle",
+"Enclosed cycle":"Band cycle"
+},
+
+ansExplain:"Correct answer Vicious cycle hai kyunki ek problem se dusri problem continuously create ho rahi hai."
+}
+
+];
+
+let current=0;
+let answers={};
+let time=900;
+let interval;
+let submitted=false;
+
+function playSound(id){
+  document.getElementById(id).play();
+}
+
+function loadQ(){
+  let q=questions[current];
+  document.getElementById("question").innerText="Q"+(current+1)+". "+q.q;
+
+  let optDiv=document.getElementById("options");
+  optDiv.innerHTML="";
+
+  q.opt.forEach(o=>{
+    let d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+
+    if(answers[current]==o) d.classList.add("selected");
+
+    d.onclick=()=>{
+      if(submitted) return;
+
+      playSound("clickSound");
+      answers[current]=o;
+
+      document.querySelectorAll(".option")
+      .forEach(x=>x.classList.remove("selected"));
+
+      d.classList.add("selected");
+      document.getElementById("btn"+current).classList.add("attempted");
+    };
+
+    optDiv.appendChild(d);
+  });
+
+  if(submitted) review();
+}
+
+function showQuestionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Meaning of Question</h3>
+    <p>${q.explainQ}</p>
+  `;
+}
+
+function showOptionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Option Meaning</h3>
+    <ul>
+      ${q.opt.map(o=>`<li><b>${o}</b> → ${q.optMeaning[o]}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function hideInfo(){
+  document.getElementById("infoBox").style.display="none";
+}
+
+function review(){
+  let q=questions[current];
+
+  document.querySelectorAll(".option").forEach(opt=>{
+    opt.classList.remove("selected");
+
+    if(opt.innerText===q.ans){
+      opt.classList.add("correct");
+    }
+
+    if(
+      answers[current] &&
+      answers[current]!==q.ans &&
+      opt.innerText===answers[current]
+    ){
+      opt.classList.add("wrong");
+    }
+  });
+
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#22c55e;">Correct Answer</h3>
+    <p><b>Answer:</b> ${q.ans}</p>
+    <p>${q.ansExplain}</p>
+  `;
+}
+
+function createPanel(){
+  let p=document.getElementById("panel");
+  questions.forEach((_,i)=>{
+    let b=document.createElement("button");
+    b.innerText=i+1;
+    b.className="qbtn";
+    b.id="btn"+i;
+    b.onclick=()=>{ current=i; loadQ(); };
+    p.appendChild(b);
+  });
+}
+
+function nextQ(){
+  if(current<questions.length-1){
+    current++;
+    loadQ();
+  }else{
+    submitQuiz();
+  }
+}
+
+function clearAns(){
+  if(!submitted){
+    delete answers[current];
+    loadQ();
+  }
+}
+
+function submitQuiz(){
+  submitted=true;
+  playSound("submitSound");
+  clearInterval(interval);
+
+  let c=0,w=0;
+
+  questions.forEach((q,i)=>{
+    if(!answers[i]) return;
+    if(answers[i]===q.ans) c++;
+    else w++;
+  });
+
+  let score=c-(w*0.25);
+  let percent=(score/questions.length)*100;
+
+  document.getElementById("result").innerHTML=`
+    <h3>Score: ${score}</h3>
+    <p>Correct: ${c} | Wrong: ${w}</p>
+    <p>Percent: ${percent.toFixed(2)}%</p>
+  `;
+
+  loadQ();
+}
+
+function timerRun(){
+  interval=setInterval(()=>{
+    time--;
+
+    let m=Math.floor(time/60);
+    let s=time%60;
+
+    document.getElementById("timer").innerText=
+      `${m}:${s<10?"0":s}`;
+
+    if(time<=0) submitQuiz();
+  },1000);
+}
+
+createPanel();
+loadQ();
+timerRun();
+
+</script>
+
+</body>
+</html>
+```

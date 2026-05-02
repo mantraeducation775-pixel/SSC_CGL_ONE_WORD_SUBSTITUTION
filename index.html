@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SSC CGL One Word Substituion Practice</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:20px;
+  background:#dc2626;
+  font-size:26px;
+  font-weight:bold;
+}
+
+/* GRID */
+.container{
+  width:95%;
+  margin:auto;
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap:15px;
+  padding:20px;
+}
+
+/* CARD */
+.card{
+  background:#111827;
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  background:#1f2937;
+}
+
+/* BUTTON */
+button{
+  margin-top:10px;
+  padding:10px 15px;
+  border:none;
+  border-radius:6px;
+  background:#2563eb;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#1d4ed8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+SSC CGL (ONE WORD SUBSTITUTION)
+</div>
+
+<div class="container" id="Sets"></div>
+
+<script>
+
+let container = document.getElementById("Sets");
+
+// 19 sets auto generate
+for(let i=1;i<=15;i++){
+
+  let card = document.createElement("div");
+  card.className="card";
+
+  card.innerHTML = `
+    <h3>SET ${i}</h3>
+    <p>One Word Substitution</p>
+    <button onclick="startTest(${i})">Start Test</button>
+  `;
+
+  container.appendChild(card);
+}
+
+// open test folder
+function startTest(n){
+  window.location.href = "Set"+n+"/index.html";
+}
+
+</script>
+
+</body>
+</html>

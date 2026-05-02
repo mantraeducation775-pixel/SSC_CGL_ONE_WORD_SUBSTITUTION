@@ -1,0 +1,647 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+}
+.header{
+  text-align:center;
+  padding:15px;
+  background:#dc2626;
+  font-size:20px;
+  font-weight:bold;
+}
+.main{
+  display:flex;
+  flex-wrap:wrap;
+  width:95%;
+  margin:auto;
+}
+.left{ flex:2; }
+.right{ flex:1; }
+
+.card{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin:10px;
+  box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+.option{
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  background:#1f2937;
+  cursor:pointer;
+  transition:.2s;
+}
+.option:hover{ background:#374151; }
+
+.selected{ background:#2563eb !important; }
+.correct{ background:#16a34a !important; }
+.wrong{ background:#dc2626 !important; }
+
+button{
+  padding:10px 14px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+}
+.primary{ background:#2563eb; }
+.danger{ background:#dc2626; }
+.submit{ background:#16a34a; }
+.info{ background:#7c3aed; }
+.orange{ background:#f59e0b; color:black; }
+.gray{ background:#475569; }
+
+.qbtn{
+  width:40px;
+  height:40px;
+  margin:4px;
+  border:none;
+  border-radius:6px;
+  background:#374151;
+  color:white;
+  cursor:pointer;
+}
+.attempted{ background:#f59e0b !important; }
+
+.timer{
+  color:#facc15;
+  font-size:18px;
+  font-weight:bold;
+}
+
+#infoBox{
+  display:none;
+  margin-top:18px;
+  padding:15px;
+  border-radius:10px;
+  background:#0f172a;
+  border:1px solid #334155;
+  line-height:1.7;
+}
+
+ul{ padding-left:20px; }
+
+@media(max-width:768px){
+  .main{ flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">SSC CGL MOCK TEST (ONE WORD SUBSTITUTION)</div>
+
+<div style="text-align:center;padding:10px;">
+⏱ Time Left: <span id="timer" class="timer">15:00</span>
+</div>
+
+<div class="main">
+
+  <div class="left">
+    <div class="card">
+
+      <h3 id="question"></h3>
+      <div id="options"></div>
+
+      <button class="primary" onclick="nextQ()">Save & Next</button>
+      <button class="danger" onclick="clearAns()">Clear</button>
+      <button class="submit" onclick="submitQuiz()">Submit</button>
+      <button class="info" onclick="showQuestionMeaning()">Meaning of Question</button>
+      <button class="orange" onclick="showOptionMeaning()">Option Meaning</button>
+      <button class="gray" onclick="hideInfo()">Hide Meaning</button>
+
+      <div id="infoBox"></div>
+      <div id="result"></div>
+
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>Questions</h3>
+      <div id="panel"></div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="submitSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+
+let questions = [
+
+ {
+q:"Dealing with things in a practical and sensible way",
+opt:["Pragmatic","Sceptic","Stoic","Cynic"],
+ans:"Pragmatic",
+
+explainQ:"Matlab cheezon ko practical aur samajhdari se handle karna.",
+
+optMeaning:{
+Pragmatic:"Practical aur sensible approach wala",
+Sceptic:"Har cheez par doubt karne wala",
+Stoic:"Emotion control karne wala",
+Cynic:"Negative soch wala"
+},
+
+ansExplain:"Correct answer Pragmatic hai kyunki practical aur sensible approach ko pragmatic bolte hain."
+},
+
+{
+q:"Anything pertaining to cats",
+opt:["Bovine","Canine","Taurine","Feline"],
+ans:"Feline",
+
+explainQ:"Matlab jo cheez cats se related ho.",
+
+optMeaning:{
+Bovine:"Cow se related",
+Canine:"Dog se related",
+Taurine:"Bull se related / compound name",
+Feline:"Cat se related"
+},
+
+ansExplain:"Correct answer Feline hai kyunki cats se related cheez ko feline bolte hain."
+},
+
+{
+q:"That which is no longer in existence",
+opt:["Extinct","Removed","Vanished","Destroyed"],
+ans:"Extinct",
+
+explainQ:"Matlab jo ab existence me nahi raha ya completely khatam ho gaya.",
+
+optMeaning:{
+Extinct:"Completely no longer existing",
+Removed:"Hata diya gaya",
+Vanished:"Gayab ho gaya",
+Destroyed:"Nasht kar diya gaya"
+},
+
+ansExplain:"Correct answer Extinct hai kyunki jo species ya thing existence me na ho use extinct bolte hain."
+},
+
+{
+q:"We have a tendency of believing in things that can be seen and touched",
+opt:["impalpable","spiritual","inexpressible","tangible"],
+ans:"tangible",
+
+explainQ:"Matlab hum aksar un cheezon par zyada believe karte hain jo dekh aur chhoo sakte hain.",
+
+optMeaning:{
+impalpable:"Jise chhoo na sake",
+spiritual:"Aadhyatmik",
+inexpressible:"Jise words me express na kar sake",
+tangible:"Jo touch aur feel kiya ja sake"
+},
+
+ansExplain:"Correct answer tangible hai kyunki seen and touched hone wali cheez tangible hoti hai."
+},
+
+{
+q:"Fear of snakes",
+opt:["Claustrophobia","Syngenesophobia","Xenophobia","Ophidiophobia"],
+ans:"Ophidiophobia",
+
+explainQ:"Matlab saanp ka dar.",
+
+optMeaning:{
+Claustrophobia:"Band jagah ka dar",
+Syngenesophobia:"Relatives/family se related fear",
+Xenophobia:"Foreigners ya strangers ka fear",
+Ophidiophobia:"Snakes ka fear"
+},
+
+ansExplain:"Correct answer Ophidiophobia hai kyunki snakes ke fear ko ophidiophobia bolte hain."
+},
+
+{
+q:"A performer's first public appearance",
+opt:["Foundation","Debut","Premise","Dawn"],
+ans:"Debut",
+
+explainQ:"Matlab kisi performer ka pehli baar public ke saamne perform karna.",
+
+optMeaning:{
+Foundation:"Neev / base",
+Debut:"Pehla public appearance",
+Premise:"Base idea",
+Dawn:"Subah ka beginning"
+},
+
+ansExplain:"Correct answer Debut hai kyunki first public appearance ko debut bolte hain."
+},
+
+{
+q:"To go through an area making a lot of noise and causing damage",
+opt:["Brutality","Cacophony","Violence","Rampage"],
+ans:"Rampage",
+
+explainQ:"Matlab kisi area me hungama machate hue damage karte jana.",
+
+optMeaning:{
+Brutality:"Cruel violence",
+Cacophony:"Bahut noisy harsh sound",
+Violence:"Hinsa",
+Rampage:"Toofani tareeke se tod-phod karna"
+},
+
+ansExplain:"Correct answer Rampage hai kyunki damage aur chaos create karte hue area se guzarne ko rampage bolte hain."
+},
+
+{
+q:"The ship launched out on a journey by water or sea of discovery",
+opt:["voyage","rendezvous","verso","vespers"],
+ans:"voyage",
+
+explainQ:"Matlab ship ka samundar ke through lambi yatra par nikalna.",
+
+optMeaning:{
+voyage:"Sea journey",
+rendezvous:"Meeting place/time",
+verso:"Page ka back side",
+vespers:"Evening prayer"
+},
+
+ansExplain:"Correct answer voyage hai kyunki sea journey ko voyage bolte hain."
+},
+
+{
+q:"Repetition of usually initial consonant sounds in neighbouring words",
+opt:["alliteration","epithet","simile","allegory"],
+ans:"alliteration",
+
+explainQ:"Matlab paas-paas ke words me same starting sound ka repeat hona.",
+
+optMeaning:{
+alliteration:"Same starting sound repetition",
+epithet:"Descriptive title",
+simile:"Comparison using like/as",
+allegory:"Symbolic story"
+},
+
+ansExplain:"Correct answer alliteration hai kyunki same initial consonant sound repeat hona alliteration kehlata hai."
+},
+
+{
+q:"The short sword fixed onto the end of a gun",
+opt:["Baron","Bayonet","Bigot","Baton"],
+ans:"Bayonet",
+
+explainQ:"Matlab bandook ke aage lagayi jane wali chhoti talwar ya blade.",
+
+optMeaning:{
+Baron:"Ek noble title",
+Bayonet:"Gun ke end par lagne wali short sword",
+Bigot:"Narrow-minded person",
+Baton:"Stick / danda"
+},
+
+ansExplain:"Correct answer Bayonet hai kyunki gun ke muzzle par fixed short sword ko bayonet bolte hain."
+},
+
+{
+q:"A person who dabbles in arts, science or literature",
+opt:["Connoisseur","Taciturn","Dilettante","Ignoramus"],
+ans:"Dilettante",
+
+explainQ:"Matlab aisa vyakti jo arts, science ya literature me interest rakhta hai, par deep expert nahi hota.",
+
+optMeaning:{
+Connoisseur:"Expert judge / knowledgeable person",
+Taciturn:"Kam bolne wala",
+Dilettante:"Superficial interest rakhne wala",
+Ignoramus:"Anpadh / ignorant person"
+},
+
+ansExplain:"Correct answer Dilettante hai kyunki casual interest rakhne wale person ko dilettante bolte hain."
+},
+
+{
+q:"Loud enough to be heard",
+opt:["Audible","Audit","Audacious","Audacity"],
+ans:"Audible",
+
+explainQ:"Matlab itni awaaz jo clearly suni ja sake.",
+
+optMeaning:{
+Audible:"Sunai dene layak",
+Audit:"Account checking process",
+Audacious:"Bold / daring",
+Audacity:"Boldness"
+},
+
+ansExplain:"Correct answer Audible hai kyunki jo sound suna ja sake use audible bolte hain."
+},
+
+{
+q:"Study of flying airplanes",
+opt:["Aviation","Alchemy","Astronomy","Acoustics"],
+ans:"Aviation",
+
+explainQ:"Matlab airplanes ke flying aur operation ka field ya study.",
+
+optMeaning:{
+Aviation:"Airplane flying/air transport field",
+Alchemy:"Purani chemical practice",
+Astronomy:"Stars aur space study",
+Acoustics:"Sound study"
+},
+
+ansExplain:"Correct answer Aviation hai kyunki airplanes se related field aviation hota hai."
+},
+
+{
+q:"Hospital for people with mental illnesses",
+opt:["Druggist","Shelter","Asylum","Hangar"],
+ans:"Asylum",
+
+explainQ:"Matlab mental illness wale logon ke treatment ke liye special hospital.",
+
+optMeaning:{
+Druggist:"Medicine seller",
+Shelter:"Sharan ki jagah",
+Asylum:"Mental hospital / refuge",
+Hangar:"Aircraft parking place"
+},
+
+ansExplain:"Correct answer Asylum hai kyunki mentally ill patients ke hospital ko asylum bolte hain."
+},
+
+{
+q:"These glass windows are so old one can't see through them",
+opt:["Black","Opaque","Dirty","Transparent"],
+ans:"Opaque",
+
+explainQ:"Matlab ye glass itna old ya cloudy ho gaya hai ki uske through dekha nahi ja sakta.",
+
+optMeaning:{
+Black:"Kala",
+Opaque:"Jiske through dekha na ja sake",
+Dirty:"Ganda",
+Transparent:"Jiske through clearly dekha ja sake"
+},
+
+ansExplain:"Correct answer Opaque hai kyunki non-see-through glass opaque hota hai."
+},
+
+{
+q:"A professional rider in horse races",
+opt:["Batsman","Jockey","Stuntman","Southpaw"],
+ans:"Jockey",
+
+explainQ:"Matlab horse race me professionally ghoda chalane wala rider.",
+
+optMeaning:{
+Batsman:"Cricket player",
+Jockey:"Horse race rider",
+Stuntman:"Dangerous stunt performer",
+Southpaw:"Left-handed person"
+},
+
+ansExplain:"Correct answer Jockey hai kyunki horse race rider ko jockey bolte hain."
+},
+
+{
+q:"A woman having more than one husband at the same time",
+opt:["Monogamy","Polymathy","Polyandry","Endogamy"],
+ans:"Polyandry",
+
+explainQ:"Matlab ek woman ke ek hi samay me ek se zyada husbands hona.",
+
+optMeaning:{
+Monogamy:"Ek spouse system",
+Polymathy:"Many subjects ka knowledge",
+Polyandry:"One woman, multiple husbands",
+Endogamy:"Apne group me marriage"
+},
+
+ansExplain:"Correct answer Polyandry hai kyunki multiple husbands wali marriage system ko polyandry bolte hain."
+},
+
+{
+q:"Attempting to impress by affecting greater importance",
+opt:["Airy","Pretentious","Glorious","Imperious"],
+ans:"Pretentious",
+
+explainQ:"Matlab unnecessarily bada ya important dikhne ki koshish karna.",
+
+optMeaning:{
+Airy:"Halka / casual",
+Pretentious:"Show-off / importance dikhane wala",
+Glorious:"Shandaar",
+Imperious:"Bossy / dominating"
+},
+
+ansExplain:"Correct answer Pretentious hai kyunki fake importance dikhane ko pretentious bolte hain."
+},
+
+{
+q:"Convenient features provided by a society or company",
+opt:["Equipment","Facilitate","Amenities","System"],
+ans:"Amenities",
+
+explainQ:"Matlab society ya company dwara di jane wali convenient facilities jaise park, gym, lift, water supply etc.",
+
+optMeaning:{
+Equipment:"Tools / machine",
+Facilitate:"Aasan banana",
+Amenities:"Facilities / conveniences",
+System:"Vyavastha"
+},
+
+ansExplain:"Correct answer Amenities hai kyunki convenient facilities ko amenities bolte hain."
+}
+
+];
+
+let current=0;
+let answers={};
+let time=900;
+let interval;
+let submitted=false;
+
+function playSound(id){
+  document.getElementById(id).play();
+}
+
+function loadQ(){
+  let q=questions[current];
+  document.getElementById("question").innerText="Q"+(current+1)+". "+q.q;
+
+  let optDiv=document.getElementById("options");
+  optDiv.innerHTML="";
+
+  q.opt.forEach(o=>{
+    let d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+
+    if(answers[current]==o) d.classList.add("selected");
+
+    d.onclick=()=>{
+      if(submitted) return;
+
+      playSound("clickSound");
+      answers[current]=o;
+
+      document.querySelectorAll(".option")
+      .forEach(x=>x.classList.remove("selected"));
+
+      d.classList.add("selected");
+      document.getElementById("btn"+current).classList.add("attempted");
+    };
+
+    optDiv.appendChild(d);
+  });
+
+  if(submitted) review();
+}
+
+function showQuestionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Meaning of Question</h3>
+    <p>${q.explainQ}</p>
+  `;
+}
+
+function showOptionMeaning(){
+  let q=questions[current];
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+
+  box.innerHTML=`
+    <h3 style="color:#facc15;">Option Meaning</h3>
+    <ul>
+      ${q.opt.map(o=>`<li><b>${o}</b> → ${q.optMeaning[o]}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function hideInfo(){
+  document.getElementById("infoBox").style.display="none";
+}
+
+function review(){
+  let q=questions[current];
+
+  document.querySelectorAll(".option").forEach(opt=>{
+    opt.classList.remove("selected");
+
+    if(opt.innerText===q.ans){
+      opt.classList.add("correct");
+    }
+
+    if(
+      answers[current] &&
+      answers[current]!==q.ans &&
+      opt.innerText===answers[current]
+    ){
+      opt.classList.add("wrong");
+    }
+  });
+
+  let box=document.getElementById("infoBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3 style="color:#22c55e;">Correct Answer</h3>
+    <p><b>Answer:</b> ${q.ans}</p>
+    <p>${q.ansExplain}</p>
+  `;
+}
+
+function createPanel(){
+  let p=document.getElementById("panel");
+  questions.forEach((_,i)=>{
+    let b=document.createElement("button");
+    b.innerText=i+1;
+    b.className="qbtn";
+    b.id="btn"+i;
+    b.onclick=()=>{ current=i; loadQ(); };
+    p.appendChild(b);
+  });
+}
+
+function nextQ(){
+  if(current<questions.length-1){
+    current++;
+    loadQ();
+  }else{
+    submitQuiz();
+  }
+}
+
+function clearAns(){
+  if(!submitted){
+    delete answers[current];
+    loadQ();
+  }
+}
+
+function submitQuiz(){
+  submitted=true;
+  playSound("submitSound");
+  clearInterval(interval);
+
+  let c=0,w=0;
+
+  questions.forEach((q,i)=>{
+    if(!answers[i]) return;
+    if(answers[i]===q.ans) c++;
+    else w++;
+  });
+
+  let score=c-(w*0.25);
+  let percent=(score/questions.length)*100;
+
+  document.getElementById("result").innerHTML=`
+    <h3>Score: ${score}</h3>
+    <p>Correct: ${c} | Wrong: ${w}</p>
+    <p>Percent: ${percent.toFixed(2)}%</p>
+  `;
+
+  loadQ();
+}
+
+function timerRun(){
+  interval=setInterval(()=>{
+    time--;
+
+    let m=Math.floor(time/60);
+    let s=time%60;
+
+    document.getElementById("timer").innerText=
+      `${m}:${s<10?"0":s}`;
+
+    if(time<=0) submitQuiz();
+  },1000);
+}
+
+createPanel();
+loadQ();
+timerRun();
+
+</script>
+
+</body>
+</html>
+```
